@@ -9,7 +9,8 @@
   An Open Framework for Architectural Captioning and Attributes Data Enrichment via Streetscape
 
   ## To Do List
-  1. ![Unfinished] Release code for integrating building and street view imagery data.
-  2. ![Unfinished] Release training data and global building dataset.
-  3. ![Unfinished] Release fine-tuned model (1B, 2B).
-  4. ![Unfinished] Develop Jupyter notebook.
+  - [x] Release code for building data harmonization.
+  - [ ] Release code for integrating building and street view imagery data.
+  - [ ] Release training data and global building dataset.
+  - [ ] Release fine-tuned model (1B, 2B).
+  - [ ] Develop Jupyter notebook.
