@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/seshing/FACADES/blob/main/logo.png?raw=true">
-    <img src="https://github.com/seshing/FACADES/blob/main/logo.png?raw=true" alt="Facades logo" width="600">
+    <img src="https://github.com/seshing/FACADES/blob/main/logo.png?raw=true" alt="Facades logo" width="500">
   </picture>
   </p>
 
