@@ -4,18 +4,6 @@ import numpy as np
 import fiona
 from shapely.geometry import Polygon
 
-def get_local_coordinate(gdf_dir):
-    """
-    Read a GeoDataFrame from disk and return a UTM CRS string
-    based on the representative longitude of its geometries.
-    """
-    gdf = gpd.read_file(gdf_dir)
-    mean_longitude = gdf["geometry"].representative_point().x.mean()
-    utm_zone = int(np.floor((mean_longitude + 180) / 6) + 1)
-    utm_crs = f"+proj=utm +zone={utm_zone} +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-    return utm_crs
-
-
 def project_gdf(gdf):
     """
     Project the input GeoDataFrame into a local UTM coordinate system
@@ -25,7 +13,6 @@ def project_gdf(gdf):
     utm_zone = int(np.floor((mean_longitude + 180) / 6) + 1)
     utm_crs = f"+proj=utm +zone={utm_zone} +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
     return gdf.to_crs(utm_crs)
-
 
 def fill_and_expand(gdf):
     """
