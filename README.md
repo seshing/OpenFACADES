@@ -5,7 +5,7 @@
   </picture>
   </p>
 
-  # OpenFACADES
+  # Open FACADES
   An Open Framework for Architectural Captioning and Attributes Data Enrichment via Street View Imagery
 
   ## To Do List
