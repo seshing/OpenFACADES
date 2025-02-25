@@ -80,7 +80,6 @@ def process_point(row, gdf, buffer, distance_between_points):
                     angle_pair = (angles[i], angles[j])
 
         total_fov = largest_fov if largest_fov < 180 else 360 - largest_fov
-        left_angle, right_angle = sorted(angle_pair)
         shortest_distance = building_distances[building_id]
 
         fov_metrics.append({
@@ -89,8 +88,8 @@ def process_point(row, gdf, buffer, distance_between_points):
             "lng": row['lng'],
             "compass_angle": row['compass_angle'],
             "building_id": building_id,
-            "left_angle_geo": left_angle,
-            "right_angle_geo": right_angle,
+            "left_angle_geo": min(angle_pair) if max(angle_pair) - min(angle_pair) < 180 else max(angle_pair),
+            "right_angle_geo": max(angle_pair) if max(angle_pair) - min(angle_pair) < 180 else min(angle_pair),
             "aov_geo": total_fov,
             "distance": shortest_distance
         })
