@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/seshing/FACADES/blob/main/icon.png?raw=true">
-    <img src="https://github.com/seshing/FACADES/blob/main/icon.png?raw=true" alt="Facades logo" width="400">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/seshing/FACADES/blob/main/logos/logo.png?raw=true">
+    <img src="https://github.com/seshing/FACADES/blob/main/logos/icon.png?raw=true" alt="Facades logo" width="400">
   </picture>
   </p>
 
@@ -10,7 +10,7 @@
 
   ## To Do List
   - [x] Release code for building data harmonization.
-  - [ ] Release code for integrating building and street view imagery data.
+  - [x] Release code for integrating building and street view imagery data.
   - [ ] Release training data and global building dataset.
   - [ ] Release fine-tuned model (1B, 2B).
   - [ ] Develop Jupyter notebook.
