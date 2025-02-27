@@ -154,7 +154,6 @@ class GroundingDinoDetector:
         geo_aov = geo_aov[(geo_aov['aov_geo'] > min_aov) & (geo_aov['aov_geo'] < max_aov)]  # Filter AoV based on min and max values
         
         # Prepare sets of PIDs
-        pid_csv = set(geo_aov['pid'].unique())
         pid_all = self._check_id(images_folder)
         
         file_path = os.path.join(output_folder, "building_bbox.csv")
@@ -163,6 +162,7 @@ class GroundingDinoDetector:
         if file_exists:
             already_id = set(pd.read_csv(file_path)['pid'].astype(str).unique())
         remaining_pid = pid_all - already_id
+        print(remaining_pid)
         print(f"Found {len(pid_all)} images total in {images_folder}, {len(remaining_pid)} remain to process.")
         
         # Create a DataFrame of 'pid' and 'image_url' based on 'remaining_pid'
@@ -171,6 +171,7 @@ class GroundingDinoDetector:
             img_path = next((os.path.join(root, name) for root, _, files in os.walk(images_folder) for name in files if name == f"{pid}.png"), None)
             if img_path is not None and os.path.exists(img_path):
                 img_data.append({'pid': pid, 'image_url': img_path})
+                print(img_data)
         img_df = pd.DataFrame(img_data)
         
         # Main detection loop
@@ -301,7 +302,7 @@ class GroundingDinoDetector:
         if not os.path.exists(folder):
             return set()
         return {
-            os.path.splitext(os.path.relpath(os.path.join(root, name), folder))[0]
+            os.path.splitext(name)[0]
             for root, _, files in os.walk(folder)
             for name in files
             if not name.startswith('.') and os.path.isfile(os.path.join(root, name))
