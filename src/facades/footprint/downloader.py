@@ -5,6 +5,7 @@ import numpy as np
 from overturemaps import core
 
 col_names = {
+            'osmid': 'building_id',
             'id': 'building_id',
             'building': 'building_type',
             'start_date': 'building_age',
@@ -47,7 +48,7 @@ class BuildingDataDownloader:
         # Keep only valid polygon geometries
         gdf = gdf[gdf.geometry.apply(lambda x: x.geom_type in ['Polygon', 'MultiPolygon'])]
         gdf.reset_index(drop=False, inplace=True)
-        
+
         # Select relevant columns
         selected_columns = ['id', 'building', 'start_date', 'building:levels', 'building:material', 'geometry']
         gdf_clean = gdf[[col for col in selected_columns if col in gdf.columns]].copy()
@@ -69,9 +70,9 @@ class BuildingDataDownloader:
         # Keep only valid polygon geometries
         gdf = gdf[gdf.geometry.apply(lambda x: x.geom_type in ['Polygon', 'MultiPolygon'])]
         gdf.reset_index(drop=False, inplace=True)
-        
+
         # Select relevant columns
-        selected_columns = ['id', 'building', 'start_date', 'building:levels', 'building:material', 'geometry']
+        selected_columns = ['osmid', 'building', 'start_date', 'building:levels', 'building:material', 'geometry']
         gdf_clean = gdf[[col for col in selected_columns if col in gdf.columns]].copy()
         gdf_clean = gdf_clean.rename(columns=col_names)
         gdf_clean = gdf_clean.set_crs("EPSG:4326")
@@ -88,7 +89,7 @@ class BuildingDataDownloader:
         gdf = core.geodataframe("building", bbox=bbox)
         gdf = gdf[gdf.geometry.apply(lambda x: x.intersects(boundary_gdf.unary_union))]
         
-        selected_columns = ['id', 'class', 'age', 'num_floors', 
+        selected_columns = ['osmid', 'class', 'age', 'num_floors', 
                             'facade_material', 'geometry']
         gdf_clean = gdf[[col for col in selected_columns if col in gdf.columns]].copy()
         gdf_clean = gdf_clean.rename(columns=col_names)
