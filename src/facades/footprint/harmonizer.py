@@ -3,6 +3,8 @@ import geopandas as gpd
 import numpy as np
 import fiona
 from shapely.geometry import Polygon
+import warnings
+warnings.filterwarnings("ignore")
 
 def project_gdf(gdf):
     """

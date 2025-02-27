@@ -162,7 +162,6 @@ class GroundingDinoDetector:
         if file_exists:
             already_id = set(pd.read_csv(file_path)['pid'].astype(str).unique())
         remaining_pid = pid_all - already_id
-        print(remaining_pid)
         print(f"Found {len(pid_all)} images total in {images_folder}, {len(remaining_pid)} remain to process.")
         
         # Create a DataFrame of 'pid' and 'image_url' based on 'remaining_pid'
