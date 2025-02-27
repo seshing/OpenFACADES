@@ -170,7 +170,7 @@ class GroundingDinoDetector:
             img_path = next((os.path.join(root, name) for root, _, files in os.walk(images_folder) for name in files if name == f"{pid}.png"), None)
             if img_path is not None and os.path.exists(img_path):
                 img_data.append({'pid': pid, 'image_url': img_path})
-                print(img_data)
+                
         img_df = pd.DataFrame(img_data)
         
         # Main detection loop
