@@ -162,13 +162,15 @@ class GroundingDinoDetector:
         already_id = set()
         if file_exists:
             already_id = set(pd.read_csv(file_path)['pid'].astype(str).unique())
-        remaining_pid = pid_csv - already_id
+        remaining_pid = pid_all - already_id
         print(f"Found {len(pid_all)} images total in {images_folder}, {len(remaining_pid)} remain to process.")
         
         # Create a DataFrame of 'pid' and 'image_url' based on 'remaining_pid'
         img_data = []
         for pid in remaining_pid:
             img_path = next((os.path.join(root, name) for root, _, files in os.walk(images_folder) for name in files if name == f"{pid}.png"), None)
+            if img_path is None:
+                raise FileNotFoundError(f"No image found for PID: {pid}")
             if os.path.exists(img_path):
                 img_data.append({'pid': pid, 'image_url': img_path})
         img_df = pd.DataFrame(img_data)
