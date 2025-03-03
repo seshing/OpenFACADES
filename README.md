@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./figs/logo.png" alt="text" width="300">
+  <img src="./figs/logo.png" alt="text" width="400">
   </p>
 
 # OpenFACADES
