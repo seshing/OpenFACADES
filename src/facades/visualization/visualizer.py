@@ -37,11 +37,12 @@ def visualize_building(csv_path, geojson_path, img_dir):
 
     # Get all rows for the selected building
     building_rows = df[df['building_id'] == selected_building_id]
-    selected_image_id = building_rows['pid'].values
-    image_paths = building_rows['image_name'].values
+    # selected_image_id = building_rows['pid'].values
+    image_paths = building_rows['image_name'].drop_duplicates().values
 
     # Limit to at most 8 images
     image_paths = image_paths[:8]
+    # print(image_paths)
 
     # Create a figure with a proper grid layout
     fig = plt.figure(figsize=(32, 10))
@@ -51,7 +52,7 @@ def visualize_building(csv_path, geojson_path, img_dir):
 
     # Left subplot for the map
     ax_map = fig.add_subplot(gs[0])
-    gdf.plot(ax=ax_map, alpha=0.5, edgecolor='none', color='#2079B4')
+    gdf.plot(ax=ax_map, alpha=0.5, edgecolor='white', linewidth=0.5, color='#2079B4')
     selected_footprint = gdf[gdf['building_id'] == selected_building_id]
     if not selected_footprint.empty:
         selected_footprint.plot(ax=ax_map, color='#D1342B', alpha=1.0, edgecolor='none')
@@ -79,7 +80,6 @@ def visualize_building(csv_path, geojson_path, img_dir):
         cols = min(4, num_images)
         rows = min(2, (num_images + cols - 1) // cols)
         
-        # Create a sub-gridspec for the images within the right panel
         gs_right = GridSpecFromSubplotSpec(rows, cols, subplot_spec=gs[1], wspace=0.1, hspace=0.1)
         
         for i, img_path in enumerate(image_paths):
@@ -97,11 +97,14 @@ def visualize_building(csv_path, geojson_path, img_dir):
                         ax.imshow(img)
                     except:
                         ax.text(0.5, 0.5, f"Failed to load\n{os.path.basename(img_path)}", 
-                                ha='center', va='center', transform=ax.transAxes, fontsize=16)
-                ax.axis('off')
-                # Get the corresponding pid for this image
-                pid = building_rows.iloc[i]['pid']
+                            ha='center', va='center', transform=ax.transAxes, fontsize=16)
+                # Get the corresponding pid based on the image name to avoid mismatches
+                try:
+                    pid = building_rows[building_rows['image_name'] == img_path]['pid'].iloc[0]
+                except IndexError:
+                    pid = 'unknown'
                 ax.set_title(f"PID: {pid}", fontsize=16)
+                ax.axis('off')
 
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
     plt.tight_layout()

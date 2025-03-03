@@ -1,4 +1,5 @@
 import geopandas as gpd
+import os
 from shapely.geometry import Point, LineString
 import pandas as pd
 import csv
@@ -121,6 +122,17 @@ def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, 
     gdf_points = gpd.GeoDataFrame(df_points, geometry=gpd.points_from_xy(df_points.lng, df_points.lat), crs="EPSG:4326")
     gdf_points = gdf_points.to_crs(city_crs)
 
+    # Check for existing output and skip processed building IDs
+    processed_pairs = set()
+    if os.path.exists(out_dir) and os.path.getsize(out_dir) > 0:
+        try:
+            existing_data = pd.read_csv(out_dir)
+            processed_pairs = set(zip(existing_data['pid'], existing_data['building_id']))
+            print(f"Found {len(processed_pairs)} existing point-building pairs to skip.")
+        except Exception as e:
+            print(f"Error reading existing output file: {e}")
+            print("Will process all point-building pairs.")
+
     total_points = len(gdf_points)
 
     # Open CSV for writing results
@@ -140,7 +152,9 @@ def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, 
 
             for future in tqdm(as_completed(future_to_batch), total=len(future_to_batch), desc="Processing batches"):
                 for metric in future.result():
-                    writer.writerow(metric)
+                    # Skip if this point-building pair has already been processed
+                    if (metric['pid'], metric['building_id']) not in processed_pairs:
+                        writer.writerow(metric)
 
-    print("Geometric FoV calculation completed. Results saved to:", out_dir)
+    print("Geometric FoV calculation completed.")
     

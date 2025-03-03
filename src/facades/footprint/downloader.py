@@ -1,8 +1,7 @@
 import osmnx as ox
-import geopandas as gpd
-import shapely
-import numpy as np
 from overturemaps import core
+import warnings
+warnings.filterwarnings("ignore")
 
 col_names = {
             'osmid': 'building_id',
@@ -126,77 +125,3 @@ class BuildingDataDownloader:
 
         else:
             raise ValueError("Invalid input: Provide either a city name (string) or a bounding box (list of four numerical values).")
-
-
-
-
-# import osmnx as ox
-# import pandas as pd
-# from IPython.display import Image
-# import geopandas as gpd
-# import numpy as np
-# import fused
-# import shapely
-# from overturemaps import core
-
-
-# def get_city_boundary(city_name):
-#     gdf = ox.geocode_to_gdf(city_name)
-#     return gdf
-
-# def download_osm_building(city_name):
-#     tags = {"building": True}
-#     gdf = ox.features_from_place(city_name, tags)
-#     gdf = gdf[gdf.geometry.apply(lambda x : x.type in ['Polygon', 'MultiPolygon'])]
-    
-#     gdf_clean = gdf_clean[select]
-#     select = [
-#     'building',
-#     'start_date',
-#     # 'building:use',
-#     'building:levels',
-#     'building:material',
-#     #  'height',
-#     'geometry']
-    
-#     return gdf_clean
-
-# def download_osm_building_box(bbox):
-#     tags = {"building": True}
-#     gdf = ox.geometries_from_bbox(*bbox, tags)
-#     gdf = gdf[gdf.geometry.apply(lambda x : x.type in ['Polygon', 'MultiPolygon'])]
-    
-#     gdf_clean = gdf_clean[select]
-#     select = [
-#     'building',
-#     'start_date',
-#     # 'building:use',
-#     'building:levels',
-#     'building:material',
-#     #  'height',
-#     'geometry']
-    
-#     return gdf_clean
-
-# def download_overture_building(city_name):
-#     gdf = get_city_boundary(city_name)
-#     bbox_coords = gdf.total_bounds
-#     bbox = gpd.GeoDataFrame(
-#         geometry=[shapely.box(*bbox_coords)], 
-#         crs="EPSG:4326"
-#     )
-
-#     gdf_output = fused.run('UDF_Overture_Maps_Example', bbox=bbox, overture_type='building')
-#     gdf = gpd.GeoDataFrame(gdf_output, geometry='geometry', crs='EPSG:4326')
-#     return gdf
-
-# def download_overture_building_box(bbox):
-#     # 'Zurich': [8.445139991956182, 47.31739848066891, 8.632056466308553, 47.445908910130036]
-#     bbox = gpd.GeoDataFrame(
-#         geometry=[shapely.box(*bbox)], 
-#         crs="EPSG:4326"
-#     )
-
-#     gdf_output = fused.run('UDF_Overture_Maps_Example', bbox=bbox, overture_type='building')
-#     gdf = gpd.GeoDataFrame(gdf_output, geometry='geometry', crs='EPSG:4326')
-#     return gdf
