@@ -6,8 +6,10 @@
 An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery
 
 ## Overview
-![text](./figs/workflow.jpg)
-
+<p align="center">
+<img src="./figs/workflow.jpg" alt="workflow" width="900">
+ </p>
+ 
 ## To Do List
 - [x] Release code for building data harmonization.
 - [x] Release code for integrating building and street view imagery data.
@@ -24,7 +26,9 @@ An Open Framework for Architectural Caption and Attribute Data Enrichment via St
 ![detect](./figs/detect_example.png)
 
 3. **Developing datasets and multimodal models**: apply state-of-the-art multimodal large language models to annotate building images with multiple attributes, including building type, surface material, number of floors, and building age, and provide detailed descriptive captions.
-![vlm](./figs/labeling.gif)
+<p align="center">
+<img src="./figs/labeling.gif" alt="vlm" width="700">
+ </p>
 
 ## Acknowledgement
 We acknowledge the contributors of OpenStreetMap, Mapillary and other platforms for providing valuable open data resources and code that support street-level imagery research and applications.
