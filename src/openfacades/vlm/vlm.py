@@ -6,6 +6,8 @@ import torch
 from .base import update_json_file, load_image
 from transformers import AutoTokenizer, AutoModel
 from tqdm import tqdm
+import time
+
 
 class InternVLProcessor:
     def __init__(self, model):
@@ -60,7 +62,10 @@ class InternVLProcessor:
         elif single_image:
             response = self.process_image(single_image, question)
             if response is not None:
-                print(f"Response for {single_image}:\n{response}")
+                # print(f"Response for {single_image}:\n{response}")
+                for char in response:
+                    print(char, end='', flush=True)
+                    time.sleep(0.02)  # Adjust the delay as needed  
         elif single_directory:
             if not output_directory:
                 raise ValueError("For single_directory, output_directory must be provided.")
