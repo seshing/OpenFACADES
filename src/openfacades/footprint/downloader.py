@@ -60,11 +60,15 @@ class BuildingDataDownloader:
 
     def _download_osm_building_box(self, bbox):
         """Download OpenStreetMap building data within a bounding box."""
-        bbox = [bbox[3], bbox[1], bbox[2], bbox[0]]
         tags = {"building": True}
         print("Retrieving data from OpenStreetMap...")
-        # gdf = ox.features_from_bbox(tuple(bbox), tags) 
-        gdf = ox.features_from_bbox(bbox=bbox, tags = tags) # N, S, E, W
+        
+        # For versions of OSMnx >= 2.0.0
+        gdf = ox.features_from_bbox(tuple(bbox), tags) 
+        
+        # For versions of OSMnx < 2.0.0
+        # bbox = [bbox[3], bbox[1], bbox[2], bbox[0]]
+        # gdf = ox.features_from_bbox(bbox=bbox, tags = tags) # N, S, E, W
 
         # Keep only valid polygon geometries
         gdf = gdf[gdf.geometry.apply(lambda x: x.geom_type in ['Polygon', 'MultiPolygon'])]
