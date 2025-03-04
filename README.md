@@ -18,6 +18,21 @@ An Open Framework for Architectural Caption and Attribute Data Enrichment via St
 - [ ] Release installation guideline.
 - [ ] Release fine-tuned model (1B, 2B).
 
+## Installation
+
+To install OpenFACADES, follow these steps:
+
+1. Clone the repository:
+  ```bash
+  git clone https://github.com/seshing/OpenFACADES.git
+  ```
+
+2. Install the package and required dependencies:
+  ```bash
+  pip install -e OpenFACADES/.
+  pip install -r OpenFACADES/requirements.txt
+  ```
+
 ## What can our method do?
 
 1. **Integrating multimodal crowdsourced data**: acquire building data from crowdsourced platforms and street view imagery for selected areas, and conduct isovist analysis to integrate them.
@@ -29,6 +44,16 @@ An Open Framework for Architectural Caption and Attribute Data Enrichment via St
 <p align="center">
 <img src="./figs/labeling.gif" alt="vlm" width="700">
  </p>
+
+## Quick start
+
+To acquire individual building images (Steps 1 & 2 above) for an area, you can simply run:
+  ```bash
+  python OpenFACADES/run.py \
+    --bbox=[left,bottom,right,top] \
+    --api_key='YOUR_MAPILLARY_API_KEY'
+  ```
+*Note: please check Mapillary has panoramic images available for the selected area.*
 
 ## Acknowledgement
 We acknowledge the contributors of OpenStreetMap, Mapillary and other platforms for providing valuable open data resources and code that support street-level imagery research and applications.
