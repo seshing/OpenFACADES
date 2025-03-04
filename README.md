@@ -7,7 +7,7 @@ An Open Framework for Architectural Caption and Attribute Data Enrichment via St
 
 ## Overview
 <p align="center">
-<img src="./figs/workflow.jpg" alt="workflow" width="900">
+<img src="./figs/overview.jpg" alt="overview" width="900">
  </p>
  
 ## To Do List
