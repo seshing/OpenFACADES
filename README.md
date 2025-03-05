@@ -18,8 +18,8 @@ An Open Framework for Architectural Caption and Attribute Data Enrichment via St
 - [x] Release code for building data harmonization.
 - [x] Release code for integrating building and street view imagery data.
 - [x] Develop Google Colab tutorial (Preview).
-- [ ] Release training data and global building dataset.
-- [ ] Release installation guideline.
+- [ ] Release global building dataset.
+- [ ] Release training data.
 - [ ] Release fine-tuned model (1B, 2B).
 
 ## Installation
