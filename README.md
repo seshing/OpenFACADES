@@ -2,12 +2,16 @@
   <img src="./figs/logo.png" alt="text" width="400">
   </p>
 
+<p align="center">
+  Preview: <a href="https://colab.research.google.com/drive/1hFKdHCBz9KJTDwCwWsMXOHH5wwOHmnyv?usp=sharing">[Google Colab]</a>
+  </p>
+
 # OpenFACADES
 An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery
 
 ## Overview
 <p align="center">
-<img src="./figs/workflow.jpg" alt="workflow" width="900">
+<img src="./figs/overview.jpg" alt="overview" width="900">
  </p>
  
 ## To Do List
