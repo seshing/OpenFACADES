@@ -55,6 +55,7 @@ def get_perspective(
     """
     Perform perspective transformation on an equirectangular image,
     simulating a camera pointed at (THETA, PHI) with a given FOV.
+    This section of code is adapted from Equirec2Perspec: https://github.com/fuenwang/Equirec2Perspec
 
     Args:
         original_image (np.ndarray): The original image in RGB format.
@@ -114,10 +115,12 @@ def calculate_dynamic_height(
     min_scale: float = 1.0,
     max_scale: float = 1.1
 ) -> float:
+    
     """
     Dynamically adjusts the height based on the tangent of the upper portion
     of the bounding box angle.
     """
+    
     box_height_degree_upper = (0.5 - y_center + (box_height / 2)) * 180
     tan_value = math.tan(math.radians(box_height_degree_upper))
     tan_normalized = tan_value / (1 + tan_value)
@@ -140,6 +143,7 @@ def save_bounding_boxes_as_images(
     image_dir: str,
     out_dir: str
 ) -> pd.DataFrame:
+    
     """
     1) Reads bounding box metadata from `all_results_path` CSV.
     2) Locates and loads each image from `image_dir`.
@@ -161,7 +165,7 @@ def save_bounding_boxes_as_images(
             - 'pid'
             - 'building_id'
     """
-    # Read the CSV
+
     all_results = pd.read_csv(all_results_path)
     building_dir = os.path.join(out_dir, "individual_building")
     os.makedirs(building_dir, exist_ok=True)
@@ -183,7 +187,6 @@ def save_bounding_boxes_as_images(
             print(f"Image not found for PID: {pid}")
             continue
 
-        # Load in RGB
         img = cv2.imread(img_path)
         if img is None:
             print
@@ -215,12 +218,10 @@ def save_bounding_boxes_as_images(
             width=out_width
         )
 
-        # Save cropped image
         out_filename = f"pid_{pid}_bdid_{building_id}.png"
         building_url = os.path.join(building_dir, out_filename)
         cropped_image.save(building_url)
 
-        # Append result metadata
         all_data.append({
             "image_name": out_filename,
             "pid": pid,
