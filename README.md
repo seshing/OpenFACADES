@@ -77,7 +77,7 @@ To acquire individual building images (Steps 1 & 2 above) for an area, you can s
 
 **Output paths:**  <br />
 detected building images: ```output/02_img/individual_building```;  <br />
-image_ids after filtering: ```output/02_img/individual_building_select.csv```.
+building image ids after filtering: ```output/02_img/individual_building_select.csv```.
 
 ## Acknowledgement
 We acknowledge the contributors of OpenStreetMap, Mapillary and other platforms for providing valuable open data resources and code that support street-level imagery research and applications.
