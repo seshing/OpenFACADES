@@ -44,7 +44,7 @@ To install OpenFACADES, follow these steps:
 
 1. **Integrating multimodal crowdsourced data**: acquire building data and street view imagery from crowdsourced platforms for selected areas, and conduct isovist analysis to integrate them.
 
-2. **Establishing building image data**: perform object detection to identify target buildings in panoramic images and reproject them back to a holistic perspective view, with image filtering functions to select high-quality building images.
+2. **Retrieving building image data**: perform object detection to identify target buildings in panoramic images and reproject them back to a holistic perspective view, with image filtering functions to select high-quality building images.
 ![detect](./figs/detect_example.png)
 
 3. **Developing datasets and multimodal models**: apply state-of-the-art multimodal large language models to annotate building images with multiple attributes, including building type, surface material, number of floors, and building age, and provide detailed descriptive captions.
