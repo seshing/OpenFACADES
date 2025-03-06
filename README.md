@@ -51,7 +51,7 @@ To install OpenFACADES, follow these steps:
 <p align="center"> 
   <img src="./figs/labeling.gif" alt="vlm" width="700">
   <br>
-  <em>(a) building attributes</em>
+  <em>(a) building attributes labeling</em>
 </p>
 
 <p align="center"> 
