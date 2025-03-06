@@ -17,10 +17,13 @@ An Open Framework for Architectural Caption and Attribute Data Enrichment via St
 ## To Do List
 - [x] Release code for building data harmonization.
 - [x] Release code for integrating building and street view imagery data.
-- [x] Develop Google Colab tutorial (Preview).
+- [x] Develop Google Colab tutorial for retriving building image data.
+- [ ] Develop Google Colab tutorial for building labeling and captioning.
+- [ ] Release fine-tuned model (1B, 2B).
 - [ ] Release global building dataset.
 - [ ] Release training data.
-- [ ] Release fine-tuned model (1B, 2B).
+- [ ] Integrate more SVI platforms into the framework.
+
 
 ## Installation
 
