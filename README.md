@@ -75,7 +75,7 @@ To acquire individual building images (Steps 1 & 2 above) for an area, you can s
 ```[-81.382,28.540,-81.376,28.543]```: an area in Orlando, the US;<br />
 ```[-70.660,-33.442,-70.655,-33.437]```: an area in Santiago, Chile;<br />
 ```[-73.578,45.497,-73.569,45.502]```: an area in Montreal, Canada;<br />
-```[37.618,55.758, 37.628, 55.763]```: an area in Moscow, Russia;<br />
+```[37.618,55.758,37.628,55.763]```: an area in Moscow, Russia;<br />
 ```[25.273,54.684,25.283,54.687]```: an area in Vilnius, Lithuania.
 
 **Output paths:**  <br />
