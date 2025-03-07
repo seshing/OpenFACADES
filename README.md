@@ -39,6 +39,7 @@ To install OpenFACADES, follow these steps:
   pip install -e OpenFACADES/.
   pip install -r OpenFACADES/requirements.txt
   ```
+*Note:* The package used `pytorch` and `torchvision`, you may need to install them separately. Please refer to the [official website](https://pytorch.org/get-started/locally/) for installation instructions.
 
 ## What can our method do?
 
