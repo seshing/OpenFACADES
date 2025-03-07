@@ -80,6 +80,7 @@ To acquire individual building images (Steps 1 & 2 above) for an area, you can s
 ```[25.273,54.684,25.283,54.687]```: an area in Vilnius, Lithuania.
 
 **Output paths:**  <br />
+building footprint: ```output/01_data/footprint.geojson```;  <br />
 detected building images: ```output/02_img/individual_building```;  <br />
 building image ids after filtering: ```output/02_img/individual_building_select.csv```.
 
