@@ -113,7 +113,7 @@ def calculate_dynamic_height(
     height: float,
     y_center: float,
     min_scale: float = 1.0,
-    max_scale: float = 1.1
+    max_scale: float = 1.05
 ) -> float:
     
     """
