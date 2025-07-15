@@ -84,5 +84,20 @@ building footprint: ```output/01_data/footprint.geojson```;  <br />
 detected building images: ```output/02_img/individual_building```;  <br />
 building image ids after filtering: ```output/02_img/individual_building_select.csv```.
 
+## Citation
+Please cite the following paper if you use `OpenFacades` in a scientific publication:
+
+```bibtex
+@misc{liang2025openfacadesopenframeworkarchitectural,
+      title={OpenFACADES: An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery}, 
+      author={Xiucheng Liang and Jinheng Xie and Tianhong Zhao and Rudi Stouffs and Filip Biljecki},
+      year={2025},
+      eprint={2504.02866},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2504.02866}, 
+}
+```
+
 ## Acknowledgement
 We acknowledge the contributors of OpenStreetMap, Mapillary and other platforms for providing valuable open data resources and code that support street-level imagery research and applications.
