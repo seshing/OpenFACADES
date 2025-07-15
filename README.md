@@ -88,7 +88,7 @@ building image ids after filtering: ```output/02_img/individual_building_select.
 Please cite the following paper if you use `OpenFacades` in a scientific publication:
 
 ```bibtex
-@misc{liang2025openfacadesopenframeworkarchitectural,
+@misc{liang2025openfacades,
       title={OpenFACADES: An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery}, 
       author={Xiucheng Liang and Jinheng Xie and Tianhong Zhao and Rudi Stouffs and Filip Biljecki},
       year={2025},
