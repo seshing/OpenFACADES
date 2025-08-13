@@ -90,6 +90,10 @@ building footprint: ```output/01_data/footprint.geojson```;  <br />
 detected building images: ```output/02_img/individual_building```;  <br />
 building image ids after filtering: ```output/02_img/individual_building_select.csv```.
 
+## Use case
+1. Liang, X., Cheng, S., Biljecki, F. (2025, June). Decoding Characteristics of Building Facades Using Street ViewImagery and Vision-Language Model. In 19th International Conference on Computational Urban Planning & Urban Management, CUPUM 2025. <br />
+https://osf.io/abyqh/files/osfstorage/685400519a7097303ec89a95
+
 ## Citation
 Please cite the following paper if you use `OpenFacades` in a scientific publication:
 
