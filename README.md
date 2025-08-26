@@ -51,7 +51,7 @@ To install OpenFACADES, follow these steps:
 <p align="center"> 
   <img src="./figs/dashboard.gif" alt="vlm" width="800">
   <br>
-  <em>(a) building attributes labeling</em>
+  <em>retrieving building image</em>
 </p>
 
 4. **Establishing dataset and multimodal models**: apply state-of-the-art multimodal large language models to annotate building images with multiple attributes, including building type, surface material, number of floors, and building age, and provide detailed descriptive captions.
@@ -93,6 +93,12 @@ building image ids after filtering: ```output/02_img/individual_building_select.
 ## Use case
 1. Liang, X., Cheng, S., Biljecki, F. (2025, June). Decoding Characteristics of Building Facades Using Street ViewImagery and Vision-Language Model. In 19th International Conference on Computational Urban Planning & Urban Management, CUPUM 2025. <br />
 https://osf.io/abyqh/files/osfstorage/685400519a7097303ec89a95
+
+2. Liang, X., Chang, J.H., Gao, S., Zhao, T. and Biljecki, F., 2024. Evaluating human perception of building exteriors using street view imagery. Building and Environment, 263, p.111875. <br />
+https://doi.org/10.1016/j.buildenv.2024.111875
+
+3. Lei, B., Liang, X. and Biljecki, F., 2024. Integrating human perception in 3D city models and urban digital twins. ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, 10, pp.211-218. <br /> https://isprs-annals.copernicus.org/articles/X-4-W5-2024/211/2024/isprs-annals-X-4-W5-2024-211-2024.html
+
 
 ## Citation
 Please cite the following paper if you use `OpenFacades` in a scientific publication:
