@@ -24,13 +24,14 @@ The training scripts use relative paths from your InternVL installation director
 You have two options for training data:
 
 **Option A: Use your own data**
-- Organize your images in `data/img/` directory
-- Create JSONL annotations in `data/jsonl/train.jsonl` following [InternVL format](https://internvl.readthedocs.io/en/latest/get_started/chat_data_format.html)
+- Organize your images in `InternVL/internvl_chat/data/img/` directory
+- Create JSONL annotations in `InternVL/internvl_chat/data/jsonl/train.jsonl` following [InternVL format](https://internvl.readthedocs.io/en/latest/get_started/chat_data_format.html)
 
 **Option B: Download sample training data**
 
 ```bash
-python get_train_data.py
+cd InternVL/internvl_chat
+python ../../train/get_train_data.py
 ```
 
 **What this does:**
@@ -44,7 +45,7 @@ python get_train_data.py
 Configure your training data paths and parameters:
 
 ```bash
-python setup_data_config.py
+python ../../train/setup_data_config.py
 ```
 
 **What this does:**
@@ -53,8 +54,8 @@ python setup_data_config.py
 - Calculates dataset length for training optimization
 
 **Before running:** Update the paths in `setup_data_config.py`:
-- `img_dir`: Path to your training images (default: `data/img`)
-- `annotations`: Path to your JSONL annotation file (default: `data/jsonl/train.jsonl`)
+- `img_dir`: Path to your training images (default: `InternVL/internvl_chat/data/img`)
+- `annotations`: Path to your JSONL annotation file (default: `InternVL/internvl_chat/data/jsonl/train.jsonl`)
 - Verify your data structure matches the expected format
 
 ### Step 3: Configure Training Parameters
@@ -62,7 +63,7 @@ python setup_data_config.py
 Customize the training parameters and generate the training script:
 
 ```bash
-python setup_training_config.py
+python ../../train/setup_training_config.py
 ```
 
 **What this does:**
@@ -82,8 +83,7 @@ python setup_training_config.py
 Execute the training process using the generated script:
 
 ```bash
-cd InternVL/internvl_chat
-GPUS=5 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/internvl3_2b_dynamic_res_2nd_finetune_full_building.sh
+GPUS=1 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/internvl3_1b_dynamic_res_2nd_finetune_full_building.sh
 ```
 
 **Training Configuration:**
@@ -108,19 +108,21 @@ GPUS=5 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/internvl3_2b_dy
 
 ```
 InternVL/
-├── models/
-│   ├── InternVL3-2B/                # Pre-trained model
-│   └── InternVL3-2B-finetuned/      # Output directory for fine-tuned model
-├── internvl_chat/
-│   └── shell/
-│       ├── data/
-│       │   └── internvl_finetune_building.json  # Generated data config
-│       └── internvl3.0/2nd_finetune/
-│           └── internvl3_*_building.sh          # Generated training script
-└── data/
-    ├── img/                         # Your training images
-    └── jsonl/
-        └── train.jsonl              # Your training annotations
+└── internvl_chat/
+    ├── pretrain/
+    │   └── InternVL3-*B/                          # Pre-trained model
+    ├── fintuned/
+    │   └── InternVL3-*B-finetuned/      # Output directory for fine-tuned model
+    ├── data/
+    │   ├── img/                             # Your training images
+    │   └── jsonl/
+    │       └── train.jsonl                  # Your training annotations
+    └── shell/
+        ├── data/
+        │   └── internvl_finetune_building.json  # Generated data config
+        └── internvl3.0/2nd_finetune/
+            └── internvl3_*_building.sh          # Generated training script
+
 ```
 
 ## Notes
@@ -129,4 +131,4 @@ InternVL/
 - Adjust batch size and GPU count based on your hardware capacity
 - Training time depends on dataset size and selected hyperparameters
 - Monitor GPU memory usage and adjust batch size if needed
-- The fine-tuned model will be saved to `InternVL/models/InternVL3-{model_size}B-finetuned/`
+- The fine-tuned model will be saved to `InternVL/internvl_chat/shell/models/InternVL3-{model_size}B-finetuned/`

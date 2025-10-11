@@ -30,7 +30,7 @@ data = {
 }
 
 # Output path for the training configuration JSON
-output_path = "InternVL/internvl_chat/shell/data/internvl_finetune_building.json"
+output_path = "shell/data/internvl_finetune_building.json"
 
 print(f"Creating training data configuration...")
 print(f"Image directory: {img_dir}")
