@@ -26,14 +26,13 @@ def main():
     zip_path = os.path.join(repo_dir, cand[0])
 
     # Extract into data/img
-    out_img = os.path.join(DEST, "img")
-    os.makedirs(out_img, exist_ok=True)
-    print(f"📦 Extracting {zip_path} → {out_img}")
+    os.makedirs(DEST, exist_ok=True)
+    print(f"Extracting {zip_path} → {DEST}")
     with zipfile.ZipFile(zip_path, "r") as zf:
-        zf.extractall(out_img)
+        zf.extractall(DEST)
 
-    print("✅ Download + extract complete.")
-    print(f"Images in: {out_img}")
+    print("Download + extract complete.")
+    print(f"Images in: {DEST}")
     print(f"JSONL in:  {os.path.join(repo_dir, 'jsonl')}")
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ mode = 'full'
 # Training hyperparameters
 adjust_train_epochs = 3
 adjust_learning_rate = 8e-6  # Default: 4e-5
-model_size = '2'  # Options: '1', '2', '8'
+model_size = '1'  # Options: '1', '2', '8'
 
 # Script file configuration
 adjust_file = f'internvl3_{model_size}b_dynamic_res_2nd_finetune_{mode}.sh'
@@ -37,14 +37,18 @@ with open(os.path.join(sh_dir, adjust_file), 'r') as file:
     filedata = file.read()
 
 # Define all replacements
+# Handle multiple possible learning rate strings in the source script
+_lr_candidates = ['--learning_rate 1e-5', '--learning_rate 2e-5']
+_lr_replacements = [(c, f'--learning_rate {adjust_learning_rate}') for c in _lr_candidates]
+_lr_replacements = [pair for pair in _lr_replacements if pair[0] in filedata]
+
 replacements = [
-    ("work_dirs/internvl_chat_v3/internvl3_2b_dynamic_res_2nd_finetune_full", f"{adjust_OUTPUT_DIR}"),
+    (f"work_dirs/internvl_chat_v3/internvl3_{model_size}b_dynamic_res_2nd_finetune_full", f"{adjust_OUTPUT_DIR}"),
     ('--meta_path "./shell/data/internvl_1_2_finetune_custom.json"', f'--meta_path "{adjust_meta_path}"'),
     ('--num_train_epochs 1', f'--num_train_epochs {adjust_train_epochs}'),
-    ('--learning_rate 2e-5', f'--learning_rate {adjust_learning_rate}'),
     ('--freeze_backbone True', f'--freeze_backbone {adjust_freeze_backbone}'),
     (f'--model_name_or_path "OpenGVLab/InternVL3-{model_size}B"', f'--model_name_or_path "{adjust_model_path}"'),
-]
+] + _lr_replacements
 
 # Apply all replacements
 filedata = apply_config_replacements(filedata, replacements)
@@ -64,4 +68,4 @@ with open(os.path.join(sh_dir, save_file), 'w') as file:
 print("Training configuration script created successfully!")
 print(f"=== Run the following command to start training: === ")
 print(f"cd <your-model-path>/InternVL/internvl_chat")
-print(f"GPUS=5 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/{save_file}")
+print(f"GPUS=1 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/{save_file}")
