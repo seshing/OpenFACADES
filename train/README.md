@@ -1,7 +1,7 @@
 
 # Fine-tuning InternVL for Building Detection
 
-This guide walks you through the process of fine-tuning InternVL models for building facade detection and analysis.
+This guide walks you through the process of fine-tuning InternVL3 models for building facade detection and analysis. We use **InternVL3-1B** as the example throughout this guide, but the process works for other model sizes (2B, 8B) as well.
 
 ## Prerequisites
 
@@ -73,7 +73,7 @@ python ../../train/setup_training_config.py
 - Generates a customized training script
 
 **Configuration options:**
-- `model_size`: InternVL model size ('1', '2', or '8')
+- `model_size`: InternVL3 model size ('1', '2', or '8') - we use '1' for InternVL3-1B in this example
 - `adjust_train_epochs`: Number of training epochs
 - `adjust_learning_rate`: Learning rate for fine-tuning
 - `adjust_freeze_backbone`: Whether to freeze the backbone during training
@@ -131,4 +131,4 @@ InternVL/
 - Adjust batch size and GPU count based on your hardware capacity
 - Training time depends on dataset size and selected hyperparameters
 - Monitor GPU memory usage and adjust batch size if needed
-- The fine-tuned model will be saved to `InternVL/internvl_chat/shell/models/InternVL3-{model_size}B-finetuned/`
+- The fine-tuned model will be saved to `InternVL/internvl_chat/shell/models/InternVL3-1B-finetuned/`
