@@ -19,7 +19,27 @@ The training scripts use relative paths from your InternVL installation director
 
 ## Training Steps
 
-### Step 1: Setup Training Data Configuration
+### Step 1: Prepare Training Data
+
+You have two options for training data:
+
+**Option A: Use your own data**
+- Organize your images in `data/img/` directory
+- Create JSONL annotations in `data/jsonl/train.jsonl` following [InternVL format](https://internvl.readthedocs.io/en/latest/get_started/chat_data_format.html)
+
+**Option B: Download sample training data**
+
+```bash
+python get_train_data.py
+```
+
+**What this does:**
+- Downloads training images from Hugging Face `seshing/openfacades-dataset`
+- Downloads training annotations (`jsonl/train.jsonl`)
+- Automatically extracts and organizes the data
+- Creates the proper directory structure for training
+
+### Step 2: Setup Training Data Configuration
 
 Configure your training data paths and parameters:
 
@@ -37,7 +57,7 @@ python setup_data_config.py
 - `annotations`: Path to your JSONL annotation file (default: `data/jsonl/train.jsonl`)
 - Verify your data structure matches the expected format
 
-### Step 2: Configure Training Parameters
+### Step 3: Configure Training Parameters
 
 Customize the training parameters and generate the training script:
 
@@ -57,7 +77,7 @@ python setup_training_config.py
 - `adjust_learning_rate`: Learning rate for fine-tuning
 - `adjust_freeze_backbone`: Whether to freeze the backbone during training
 
-### Step 3: Run Fine-tuning
+### Step 4: Run Fine-tuning
 
 Execute the training process using the generated script:
 
@@ -71,7 +91,7 @@ GPUS=5 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/internvl3_2b_dy
 - `PER_DEVICE_BATCH_SIZE`: Batch size per GPU device
 - The exact script name depends on your model size configuration from Step 2
 
-### Step 4: Monitor Training
+### Step 5: Monitor Training
 
 - Training logs will be saved to the specified output directory
 - Monitor GPU usage and training loss
@@ -79,6 +99,7 @@ GPUS=5 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/internvl3_2b_dy
 
 ## Configuration Files
 
+- `get_train_data.py`: Downloads and extracts training data from Hugging Face repository
 - `setup_data_config.py`: Creates data configuration JSON for training
 - `setup_training_config.py`: Generates customized training script with your parameters
 - Generated shell script: Ready-to-use training execution script
