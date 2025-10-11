@@ -10,6 +10,8 @@
 An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery
 
 ## Overview
+OpenFACADES is an open-source framework designed to enrich building profiles with objective attributes and semantic descriptors by leveraging multimodal crowdsourced data and large vision-language models. It provides tools for integrating diverse datasets, automating building facade detection, and generating detailed annotations at scale.
+
 <p align="center">
 <img src="./figs/overview.jpg" alt="overview" width="900">
  </p>
@@ -18,12 +20,12 @@ An Open Framework for Architectural Caption and Attribute Data Enrichment via St
 - [x] Release code for building data harmonization.
 - [x] Release code for integrating building and street view imagery data.
 - [x] Develop Google Colab tutorial for retriving building image data.
+- [x] Release training code for fine-tuning InternVL models.
 - [ ] Develop Google Colab tutorial for building labeling and captioning.
 - [ ] Release fine-tuned model (1B, 2B).
 - [ ] Release global building dataset.
 - [ ] Release training data.
 - [ ] Integrate more SVI platforms into the framework.
-
 
 ## Installation
 
@@ -66,6 +68,12 @@ To install OpenFACADES, follow these steps:
   <br>
   <em>(b) image captioning</em>
 </p>
+
+## Model Training
+
+To fine-tune InternVL models for building facade analysis and captioning, see our detailed training guide:
+
+📖 **[Fine-tuning Guide](src/openfacades/train/README.md)** - Complete instructions for training InternVL models on building data
 
 ## Quick start
 
