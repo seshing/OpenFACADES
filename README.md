@@ -24,7 +24,7 @@ OpenFACADES is an open-source framework designed to enrich building profiles wit
 ![detect](./figs/detect_example.png)
 
 <p align="center"> 
-  <img src="./figs/dashboard.gif" alt="vlm" width="800">
+  <img src="./figs/dashboard.gif" alt="vlm" width="700">
   <br>
   <em>retrieving building image</em>
 </p>
