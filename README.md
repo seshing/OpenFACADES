@@ -102,7 +102,7 @@ building image ids after filtering: ```output/02_img/individual_building_select.
 
 To finetune InternVL models for building facade analysis and captioning, see our detailed training guide:
 
-📖 [Fine-tuning Guide](src/openfacades/train/README.md) — Instructions for training InternVL models on building data
+📖 [Fine-tuning Guide](train/README.md) — Instructions for training InternVL models on building data
 
 🗂️ [OpenFACADES Training Dataset](https://huggingface.co/datasets/seshing/openfacades-dataset) — Training data on Hugging Face
 
