@@ -1,15 +1,3 @@
 zensvi>=1.1.0
 overturemaps 
 geopandas >= 1.0.1
-fiona
-accelerate==0.34.2
-transformers==4.37.2
-huggingface_hub
-deepspeed==0.15.3
-einops==0.8.1
-peft==0.10.0
-flash-attn==2.8.3
-datasets
-imageio
-decord
-tensorboardX

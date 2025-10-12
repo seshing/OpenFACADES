@@ -5,91 +5,79 @@ This guide walks you through the process of fine-tuning InternVL3 models for bui
 
 ## Prerequisites
 
-- InternVL model installed and configured
-- Training data in the correct format (see [InternVL Chat Data Format](https://internvl.readthedocs.io/en/latest/get_started/chat_data_format.html))
 - GPU resources available for training
+- Conda or Python environment management
+- Git for cloning repositories
 
-## Setup
+## Complete Setup
 
-The training scripts use relative paths from your InternVL installation directory. Make sure you have:
+Follow these steps to set up everything from scratch:
 
-- **InternVL installation**: Download and set up InternVL3 model (see [InternVL3 Fine-tuning Guide](https://internvl.readthedocs.io/en/latest/internvl3.0/finetune.html))
-- **Training data**: Organize your images and JSONL annotations in the `data/` directory
-- **Working directory**: Run scripts from your InternVL installation root
+### Step 1: Clone Repositories and Setup Environment
+
+```bash
+# Clone OpenFACADES repository
+git clone https://github.com/seshing/OpenFACADES.git
+cd OpenFACADES
+
+# Clone InternVL repository
+git clone https://github.com/OpenGVLab/InternVL.git
+
+# Create and activate conda environment
+conda create -n internvl python=3.9
+conda activate internvl
+
+# Install dependencies
+pip install -r train/requirements.txt
+```
+
+### Step 2: Download Pre-trained Model
+
+```bash
+# Download InternVL3-1B model
+huggingface-cli download --resume-download --local-dir-use-symlinks False OpenGVLab/InternVL3-1B --local-dir InternVL/internvl_chat/pretrain/InternVL3-1B
+```
 
 ## Training Steps
 
-### Step 1: Prepare Training Data
+### Step 3: Prepare Training Data and Configuration
 
-You have two options for training data:
-
-**Option A: Use your own data**
-- Organize your images in `InternVL/internvl_chat/data/img/` directory
-- Create JSONL annotations in `InternVL/internvl_chat/data/jsonl/train.jsonl` following [InternVL format](https://internvl.readthedocs.io/en/latest/get_started/chat_data_format.html)
-
-**Option B: Download sample training data**
+Navigate to the InternVL directory and run the training setup scripts:
 
 ```bash
 cd InternVL/internvl_chat
-python ../../train/get_train_data.py
+
+# Download sample training data from Hugging Face
+python3 ../../train/get_train_data.py
+
+# Setup data configuration
+python3 ../../train/setup_data_config.py
+
+# Configure training parameters and generate training script
+python3 ../../train/setup_training_config.py
 ```
 
-**What this does:**
-- Downloads training images from Hugging Face `seshing/openfacades-dataset`
-- Downloads training annotations (`jsonl/train.jsonl`)
-- Automatically extracts and organizes the data
-- Creates the proper directory structure for training
+**What these scripts do:**
+- `get_train_data.py`: Downloads training images and annotations from `seshing/openfacades-dataset`
+- `setup_data_config.py`: Creates data configuration JSON for InternVL training
+- `setup_training_config.py`: Generates customized training script with your parameters
 
-### Step 2: Setup Training Data Configuration
-
-Configure your training data paths and parameters:
-
-```bash
-python ../../train/setup_data_config.py
-```
-
-**What this does:**
-- Creates the data configuration JSON file for InternVL training
-- Specifies image directory and annotation file paths
-- Calculates dataset length for training optimization
-
-**Before running:** Update the paths in `setup_data_config.py`:
-- `img_dir`: Path to your training images (default: `InternVL/internvl_chat/data/img`)
-- `annotations`: Path to your JSONL annotation file (default: `InternVL/internvl_chat/data/jsonl/train.jsonl`)
-- Verify your data structure matches the expected format
-
-### Step 3: Configure Training Parameters
-
-Customize the training parameters and generate the training script:
-
-```bash
-python ../../train/setup_training_config.py
-```
-
-**What this does:**
-- Modifies the InternVL training shell script with your parameters
-- Sets training epochs, learning rate, and model paths
-- Configures output directory and backbone freezing options
-- Generates a customized training script
-
-**Configuration options:**
-- `model_size`: InternVL3 model size ('1', '2', or '8') - we use '1' for InternVL3-1B in this example
-- `adjust_train_epochs`: Number of training epochs
-- `adjust_learning_rate`: Learning rate for fine-tuning
-- `adjust_freeze_backbone`: Whether to freeze the backbone during training
+**Using your own data:** 
+- Place images in `InternVL/internvl_chat/data/img/` directory
+- Create JSONL annotations in `InternVL/internvl_chat/data/jsonl/train.jsonl` following [InternVL format](https://internvl.readthedocs.io/en/latest/get_started/chat_data_format.html)
 
 ### Step 4: Run Fine-tuning
 
-Execute the training process using the generated script:
+Execute the training process:
 
 ```bash
 GPUS=1 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/internvl3_1b_dynamic_res_2nd_finetune_full_building.sh
 ```
 
 **Training Configuration:**
-- `GPUS`: Number of GPUs to use (adjust based on your hardware)  
-- `PER_DEVICE_BATCH_SIZE`: Batch size per GPU device
-- The exact script name depends on your model size configuration from Step 2
+- `GPUS=1`: Number of GPUs to use (adjust based on your hardware)  
+- `PER_DEVICE_BATCH_SIZE=1`: Batch size per GPU device (increase if you have more GPU memory)
+- Uses InternVL3-1B model as example
 
 ### Step 5: Monitor Training
 
@@ -107,22 +95,25 @@ GPUS=1 PER_DEVICE_BATCH_SIZE=1 sh shell/internvl3.0/2nd_finetune/internvl3_1b_dy
 ## Directory Structure
 
 ```
-InternVL/
-└── internvl_chat/
-    ├── pretrain/
-    │   └── InternVL3-*B/                          # Pre-trained model
-    ├── fintuned/
-    │   └── InternVL3-*B-finetuned/      # Output directory for fine-tuned model
-    ├── data/
-    │   ├── img/                             # Your training images
-    │   └── jsonl/
-    │       └── train.jsonl                  # Your training annotations
-    └── shell/
+OpenFACADES/
+├── train/                          # Training scripts
+│   ├── get_train_data.py
+│   ├── setup_data_config.py
+│   ├── setup_training_config.py
+│   └── requirements.txt
+└── InternVL/
+    └── internvl_chat/
+        ├── pretrain/
+        │   └── InternVL3-1B/           # Downloaded pre-trained model
         ├── data/
-        │   └── internvl_finetune_building.json  # Generated data config
-        └── internvl3.0/2nd_finetune/
-            └── internvl3_*_building.sh          # Generated training script
-
+        │   ├── img/                    # Training images
+        │   └── jsonl/
+        │       └── train.jsonl         # Training annotations
+        └── shell/
+            ├── data/
+            │   └── internvl_finetune_building.json  # Generated data config
+            └── internvl3.0/2nd_finetune/
+                └── internvl3_1b_*_building.sh      # Generated training script
 ```
 
 ## Notes
@@ -131,4 +122,4 @@ InternVL/
 - Adjust batch size and GPU count based on your hardware capacity
 - Training time depends on dataset size and selected hyperparameters
 - Monitor GPU memory usage and adjust batch size if needed
-- The fine-tuned model will be saved to `InternVL/internvl_chat/shell/models/InternVL3-1B-finetuned/`
+- The fine-tuned model will be saved to `InternVL/internvl_chat/finetuned/InternVL3-1B-finetuned/`
