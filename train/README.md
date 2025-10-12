@@ -1,7 +1,7 @@
 
-# Fine-tuning InternVL for Building Detection
+# Fine-tuning InternVL
 
-This guide walks you through the process of fine-tuning InternVL3 models for building facade detection and analysis. We use **InternVL3-1B** as the example throughout this guide, but the process works for other model sizes (2B, 8B) as well.
+This guide walks you through the process of fine-tuning InternVL3 models for building annotation. We use **InternVL3-1B** as the example throughout this guide, but the process works for other model sizes (2B, 8B) as well.
 
 ## Prerequisites
 
@@ -37,6 +37,8 @@ pip install -r train/requirements.txt
 # Download InternVL3-1B model
 huggingface-cli download --resume-download --local-dir-use-symlinks False OpenGVLab/InternVL3-1B --local-dir InternVL/internvl_chat/pretrain/InternVL3-1B
 ```
+
+For other InternVL3 model sizes and full setup instructions, see the official fine-tuning guide: https://internvl.readthedocs.io/en/latest/internvl3.0/finetune.html.
 
 ## Training Steps
 
