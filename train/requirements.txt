@@ -10,3 +10,5 @@ datasets
 imageio
 decord
 tensorboardX
+opencv-python
+timm

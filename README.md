@@ -2,9 +2,9 @@
   <img src="./figs/logo.png" alt="text" width="400">
   </p>
 
-<p align="center">
+<!-- <p align="center">
   Tutorial preview: <a href="https://colab.research.google.com/drive/1hFKdHCBz9KJTDwCwWsMXOHH5wwOHmnyv?usp=sharing">[Google Colab]</a>
-  </p>
+  </p> -->
 
 # OpenFACADES
 An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery
@@ -15,16 +15,48 @@ OpenFACADES is an open-source framework designed to enrich building profiles wit
 <p align="center">
 <img src="./figs/overview.jpg" alt="overview" width="900">
  </p>
- 
+
+## What can our method do?
+
+1. **Integrating multimodal crowdsourced data**: acquire building data and street view imagery from crowdsourced platforms for selected areas, and conduct isovist analysis to integrate them.
+
+2. **Retrieving building image data**: perform object detection to identify target buildings in panoramic images and reproject them back to a holistic perspective view, with image filtering functions to select high-quality building images.
+![detect](./figs/detect_example.png)
+
+<p align="center"> 
+  <img src="./figs/dashboard.gif" alt="vlm" width="800">
+  <br>
+  <em>retrieving building image</em>
+</p>
+
+3. **Establishing dataset and multimodal models**: apply state-of-the-art multimodal large language models to annotate building images with multiple attributes, including building type, surface material, number of floors, and building age, and provide detailed descriptive captions.
+<p align="center"> 
+  <img src="./figs/labeling.gif" alt="vlm" width="700">
+  <br>
+  <em>(a) building attributes labeling</em>
+</p>
+
+<p align="center"> 
+  <img src="./figs/captioning.gif" alt="vlm" width="700">
+  <br>
+  <em>(b) image captioning</em>
+</p>
+
+## Tutorial preview
+**1. Retrieving building image data**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hFKdHCBz9KJTDwCwWsMXOHH5wwOHmnyv?usp=sharing)
+
+**2. Building image labeling and captioning using VLM**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1M01pYey72DiLQlOW6hnkb-J2OUlASnNC?usp=sharing)
+
 ## To Do List
 - [x] Release code for building data harmonization.
 - [x] Release code for integrating building and street view imagery data.
 - [x] Develop Google Colab tutorial for retriving building image data.
 - [x] Release training code for fine-tuning InternVL models.
 - [x] Release training data.
-- [ ] Develop Google Colab tutorial for building labeling and captioning.
-- [ ] Release fine-tuned model (1B, 2B).
+- [x] Develop Google Colab tutorial for building labeling and captioning.
+- [x] Release fine-tuned model (1B, 2B).
 - [ ] Integrate more SVI platforms into the framework.
+- [ ]  Expand criteria for building image selection.
 
 ## Installation
 
@@ -42,39 +74,6 @@ To install OpenFACADES, follow these steps:
   ```
 *Note:* The package used `pytorch` and `torchvision`, you may need to install them separately. Please refer to the [official website](https://pytorch.org/get-started/locally/) for installation instructions.
 
-## What can our method do?
-
-1. **Integrating multimodal crowdsourced data**: acquire building data and street view imagery from crowdsourced platforms for selected areas, and conduct isovist analysis to integrate them.
-
-2. **Retrieving building image data**: perform object detection to identify target buildings in panoramic images and reproject them back to a holistic perspective view, with image filtering functions to select high-quality building images.
-![detect](./figs/detect_example.png)
-
-<p align="center"> 
-  <img src="./figs/dashboard.gif" alt="vlm" width="800">
-  <br>
-  <em>retrieving building image</em>
-</p>
-
-4. **Establishing dataset and multimodal models**: apply state-of-the-art multimodal large language models to annotate building images with multiple attributes, including building type, surface material, number of floors, and building age, and provide detailed descriptive captions.
-<p align="center"> 
-  <img src="./figs/labeling.gif" alt="vlm" width="700">
-  <br>
-  <em>(a) building attributes labeling</em>
-</p>
-
-<p align="center"> 
-  <img src="./figs/captioning.gif" alt="vlm" width="700">
-  <br>
-  <em>(b) image captioning</em>
-</p>
-
-## Model Training
-
-To finetune InternVL models for building facade analysis and captioning, see our detailed training guide:
-
-📖 [Fine-tuning Guide](src/openfacades/train/README.md) — Instructions for training InternVL models on building data
-
-🗂️ [OpenFACADES Training Dataset](https://huggingface.co/datasets/seshing/openfacades-dataset) — Training data on Hugging Face
 
 ## Quick start
 
@@ -98,6 +97,14 @@ To acquire individual building images (Steps 1 & 2 above) for an area, you can s
 building footprint: ```output/01_data/footprint.geojson```;  <br />
 detected building images: ```output/02_img/individual_building```;  <br />
 building image ids after filtering: ```output/02_img/individual_building_select.csv```.
+
+## Model Training
+
+To finetune InternVL models for building facade analysis and captioning, see our detailed training guide:
+
+📖 [Fine-tuning Guide](src/openfacades/train/README.md) — Instructions for training InternVL models on building data
+
+🗂️ [OpenFACADES Training Dataset](https://huggingface.co/datasets/seshing/openfacades-dataset) — Training data on Hugging Face
 
 ## Use case
 1. Liang, X., Cheng, S., Biljecki, F. (2025, June). Decoding Characteristics of Building Facades Using Street ViewImagery and Vision-Language Model. In 19th International Conference on Computational Urban Planning & Urban Management, CUPUM 2025. <br />
