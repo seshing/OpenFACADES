@@ -11,7 +11,7 @@ model_size = '1'  # Options: '1', '2', '8'
 # Script file configuration
 adjust_file = f'internvl3_{model_size}b_dynamic_res_2nd_finetune_{mode}.sh'
 save_file = f'internvl3_{model_size}b_dynamic_res_2nd_finetune_{mode}_building.sh'
-sh_dir = 'InternVL/internvl_chat/shell/internvl3.0/2nd_finetune'
+sh_dir = 'internvl_chat/shell/internvl3.0/2nd_finetune'
 
 # Output directory for the fine-tuned model
 adjust_OUTPUT_DIR = f'finetuned/InternVL3-{model_size}B-finetuned'
