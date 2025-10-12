@@ -21,10 +21,9 @@ OpenFACADES is an open-source framework designed to enrich building profiles wit
 - [x] Release code for integrating building and street view imagery data.
 - [x] Develop Google Colab tutorial for retriving building image data.
 - [x] Release training code for fine-tuning InternVL models.
+- [x] Release training data.
 - [ ] Develop Google Colab tutorial for building labeling and captioning.
 - [ ] Release fine-tuned model (1B, 2B).
-- [ ] Release global building dataset.
-- [ ] Release training data.
 - [ ] Integrate more SVI platforms into the framework.
 
 ## Installation
@@ -71,9 +70,11 @@ To install OpenFACADES, follow these steps:
 
 ## Model Training
 
-To fine-tune InternVL models for building facade analysis and captioning, see our detailed training guide:
+To finetune InternVL models for building facade analysis and captioning, see our detailed training guide:
 
-📖 **[Fine-tuning Guide](src/openfacades/train/README.md)** - Complete instructions for training InternVL models on building data
+📖 [Fine-tuning Guide](src/openfacades/train/README.md) — Instructions for training InternVL models on building data
+
+🗂️ [OpenFACADES Training Dataset](https://huggingface.co/datasets/seshing/openfacades-dataset) — Training data on Hugging Face
 
 ## Quick start
 
