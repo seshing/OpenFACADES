@@ -5,7 +5,7 @@ import json
 # =============================================================================
 
 # Path to your training images directory
-img_dir = "data/img"
+img_dir = "data/img/train"
 
 # Path to your training annotations (JSONL format)
 annotations = "data/jsonl/train.jsonl"
