@@ -28,7 +28,11 @@ conda create -n internvl python=3.9
 conda activate internvl
 
 # Install dependencies
-pip install -r train/requirements.txt
+pip install -r train/requirements.txt 
+
+# Or install from InternVL
+pip install -r InternVL/requirements.txt 
+pip install flash-attn
 ```
 
 ### Step 2: Download Pre-trained Model
