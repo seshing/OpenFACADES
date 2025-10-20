@@ -16,6 +16,11 @@ OpenFACADES is an open-source framework designed to enrich building profiles wit
 <img src="./figs/overview.jpg" alt="overview" width="900">
  </p>
 
+## Tutorial preview
+**1. Retrieving building image data**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hFKdHCBz9KJTDwCwWsMXOHH5wwOHmnyv?usp=sharing)
+
+**2. Building image labeling and captioning using VLM**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1M01pYey72DiLQlOW6hnkb-J2OUlASnNC?usp=sharing)
+
 ## What can our method do?
 
 1. **Integrating multimodal crowdsourced data**: acquire building data and street view imagery from crowdsourced platforms for selected areas, and conduct isovist analysis to integrate them.
@@ -42,10 +47,6 @@ OpenFACADES is an open-source framework designed to enrich building profiles wit
   <em>(b) image captioning</em>
 </p>
 
-## Tutorial preview
-**1. Retrieving building image data**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hFKdHCBz9KJTDwCwWsMXOHH5wwOHmnyv?usp=sharing)
-
-**2. Building image labeling and captioning using VLM**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1M01pYey72DiLQlOW6hnkb-J2OUlASnNC?usp=sharing)
 
 ## To Do List
 - [x] Release code for building data harmonization.

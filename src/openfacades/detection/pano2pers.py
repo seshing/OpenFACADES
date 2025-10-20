@@ -113,7 +113,7 @@ def calculate_dynamic_height(
     height: float,
     y_center: float,
     min_scale: float = 1.0,
-    max_scale: float = 1.05
+    max_scale: float = 1.025
 ) -> float:
     
     """
@@ -215,7 +215,17 @@ def save_bounding_boxes_as_images(
             THETA=theta,
             PHI=phi,
             height=dyn_height,
-            width=out_width
+            width=# `out_width` is calculating the width of the output image after perspective
+            # cropping based on the width of the bounding box. It is computed by multiplying the
+            # width of the bounding box by the width of the original image. This value is used
+            # as one of the parameters for the perspective transformation to determine the final
+            # width of the cropped image.
+            # `out_width` is calculating the width of the output image after perspective
+            # cropping based on the width of the bounding box. It is computed by multiplying the
+            # width of the bounding box by the width of the original image. This value is used
+            # in the perspective cropping process to determine the final width of the cropped
+            # image.
+            out_width
         )
 
         out_filename = f"pid_{pid}_bdid_{building_id}.png"
