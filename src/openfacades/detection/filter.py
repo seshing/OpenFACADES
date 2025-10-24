@@ -13,15 +13,15 @@ def get_image_sizes(directory):
         item_path = os.path.join(directory, item)
         if os.path.isfile(item_path) and item.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
             try:
-                img = Image.open(item_path)
-                width, height = img.size
-                file_size = os.path.getsize(item_path)
-                data.append({
-                    'image_name': item,
-                    'width': width,
-                    'height': height,
-                    'file_size': file_size
-                })
+                with Image.open(item_path) as img:
+                    width, height = img.size
+                    file_size = os.path.getsize(item_path)
+                    data.append({
+                        'image_name': item,
+                        'width': width,
+                        'height': height,
+                        'file_size': file_size
+                    })
             except Exception as e:
                 print(f"Error processing {item_path}: {e}")
     

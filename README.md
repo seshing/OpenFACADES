@@ -70,6 +70,9 @@ To install OpenFACADES, follow these steps:
 
 2. Install the package and required dependencies:
   ```bash
+  conda create -n openfacades
+  conda activate openfacades
+  
   pip install -e OpenFACADES/.
   pip install -r OpenFACADES/requirements.txt
   ```
