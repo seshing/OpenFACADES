@@ -136,4 +136,4 @@ Please cite the following paper if you use `OpenFACADES` in a scientific publica
 ```
 
 ## Acknowledgement
-We acknowledge the contributors of OpenStreetMap, Mapillary and other platforms for providing valuable open data resources and code that support street-level imagery research and applications.
+We acknowledge the contributors of OpenStreetMap, Mapillary and other platforms for providing valuable open data resources and code that support street-level imagery research and applications. This project is also built with reference to the code of the following projects: [InternVL](https://github.com/OpenGVLab/InternVL), [ZenSVI](https://github.com/koito19960406/ZenSVI), [GroundingDINO](https://github.com/IDEA-Research/GroundingDINO) and [Equirec2Perspec](https://github.com/fuenwang/Equirec2Perspec). Thanks for their awesome work!

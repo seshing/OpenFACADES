@@ -85,7 +85,6 @@ class GroundingDinoDetector:
         img_height = cropped_image.shape[0]
         central_x = img_width / 2
 
-        # Convert relative coords to absolute pixel coords
         results['boxes'] = [
             [
                 (box[0] - 0.5 * box[2]) * img_width,
@@ -96,13 +95,11 @@ class GroundingDinoDetector:
             for box in results['boxes']
         ]
 
-        # Keep boxes that contain the central x-coordinate
         keep_indices = [
             i for i, box in enumerate(results['boxes'])
             if box[0] <= central_x <= box[2]
         ]
 
-        # If multiple boxes remain, keep the one with the highest logit
         if len(keep_indices) >= 2:
             filtered_logits = [results['logits'][i] for i in keep_indices]
             max_logit_index = filtered_logits.index(max(filtered_logits))
