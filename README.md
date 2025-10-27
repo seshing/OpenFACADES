@@ -121,18 +121,18 @@ https://doi.org/10.1016/j.buildenv.2024.111875
 
 
 ## Citation
-Please cite the following paper if you use `OpenFacades` in a scientific publication:
+Please cite the following paper if you use `OpenFACADES` in a scientific publication:
 
 ```bibtex
-@misc{liang2025openfacades,
-      title={OpenFACADES: An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery}, 
-      author={Xiucheng Liang and Jinheng Xie and Tianhong Zhao and Rudi Stouffs and Filip Biljecki},
-      year={2025},
-      eprint={2504.02866},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2504.02866}, 
-}
+@article{liang2025openfacades,
+        title = {OpenFACADES: An open framework for architectural caption and attribute data enrichment via street view imagery},
+        author = {Liang, Xiucheng and Xie, Jinheng and Zhao, Tianhong and Stouffs, Rudi and Biljecki, Filip},
+        year = 2025,
+        journal = {ISPRS Journal of Photogrammetry and Remote Sensing},
+        volume = {230},
+        pages = {918--942},
+        issn = {0924-2716}
+        }
 ```
 
 ## Acknowledgement
