@@ -111,13 +111,15 @@ To finetune InternVL models for building facade analysis and captioning, see our
 🗂️ [OpenFACADES Training Dataset](https://huggingface.co/datasets/seshing/openfacades-dataset) — Training data on Hugging Face
 
 ## Use case
-1. Liang, X., Cheng, S., Biljecki, F. (2025, June). Decoding Characteristics of Building Facades Using Street ViewImagery and Vision-Language Model. In 19th International Conference on Computational Urban Planning & Urban Management, CUPUM 2025. <br />
-https://osf.io/abyqh/files/osfstorage/685400519a7097303ec89a95
+[1] Liang, X., Yap, W., Biljecki, F., 2026. Heterogeneous graph neural networks for building attribute prediction from hierarchical urban features and cross-view imagery. *ISPRS Journal of Photogrammetry and Remote Sensing* 234, 185–204. <br /> 
+https://doi.org/10.1016/j.isprsjprs.2026.02.016
 
-2. Liang, X., Chang, J.H., Gao, S., Zhao, T. and Biljecki, F., 2024. Evaluating human perception of building exteriors using street view imagery. Building and Environment, 263, p.111875. <br />
+[2] Liang, X., Chang, J.H., Gao, S., Zhao, T. and Biljecki, F., 2024. Evaluating human perception of building exteriors using street view imagery. *Building and Environment*, 263, p.111875. <br />
 https://doi.org/10.1016/j.buildenv.2024.111875
 
-3. Lei, B., Liang, X. and Biljecki, F., 2024. Integrating human perception in 3D city models and urban digital twins. ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, 10, pp.211-218. <br /> https://isprs-annals.copernicus.org/articles/X-4-W5-2024/211/2024/isprs-annals-X-4-W5-2024-211-2024.html
+[3] Liang, X., Cheng, S., Biljecki, F. (2025, June). Decoding Characteristics of Building Facades Using Street ViewImagery and Vision-Language Model. In 19th International Conference on Computational Urban Planning & Urban Management, CUPUM 2025.  https://osf.io/abyqh/files/osfstorage/685400519a7097303ec89a95
+
+[4] Lei, B., Liang, X. and Biljecki, F., 2024. Integrating human perception in 3D city models and urban digital twins. *ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences*, 10, pp.211-218. <br /> https://isprs-annals.copernicus.org/articles/X-4-W5-2024/211/2024/isprs-annals-X-4-W5-2024-211-2024.html
 
 
 ## Citation
