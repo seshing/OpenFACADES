@@ -128,12 +128,12 @@ def calculate_dynamic_height(
 
 def _find_image_file(pid: str, image_dir: str) -> Optional[str]:
     """
-    Helper to locate the correct image file (.jpeg or .png) for a given PID.
+    Helper to locate the correct image file (.jpg, .jpeg or .png) for a given PID.
     Searches recursively in subfolders. Returns None if not found.
     """
     for root, _, files in os.walk(image_dir):
         for name in files:
-            if name == f"{pid}.jpeg" or name == f"{pid}.png":
+            if os.path.splitext(name)[0] == str(pid) and os.path.splitext(name)[1].lower() in (".jpg", ".jpeg", ".png"):
                 return os.path.join(root, name)
     return None
 
@@ -155,7 +155,7 @@ def save_bounding_boxes_as_images(
             - 'pid': unique image identifier
             - 'building_id': building identifier
             - 'boxes': stringified list [x_center, y_center, w, h, ...]
-        image_dir (str): Directory containing input images in .jpeg or .png.
+        image_dir (str): Directory containing input images in .jpg, .jpeg or .png.
         out_dir (str): Output directory to store subfolder of cropped images.
 
     Returns:
@@ -165,7 +165,7 @@ def save_bounding_boxes_as_images(
             - 'building_id'
     """
 
-    all_results = pd.read_csv(all_results_path)
+    all_results = pd.read_csv(all_results_path, dtype={"pid": str, "building_id": str})
     building_dir = os.path.join(out_dir, "individual_building")
     os.makedirs(building_dir, exist_ok=True)
 
@@ -227,4 +227,6 @@ def save_bounding_boxes_as_images(
             "building_id": building_id,
         })
 
-        pd.DataFrame(all_data).to_csv(os.path.join(out_dir, "individual_building.csv"), index=False)
+    result = pd.DataFrame(all_data, columns=["image_name", "pid", "building_id"])
+    result.to_csv(os.path.join(out_dir, "individual_building.csv"), index=False)
+    return result

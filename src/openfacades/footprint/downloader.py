@@ -47,6 +47,7 @@ class BuildingDataDownloader:
         # Keep only valid polygon geometries
         gdf = gdf[gdf.geometry.apply(lambda x: x.geom_type in ['Polygon', 'MultiPolygon'])]
         gdf.reset_index(drop=False, inplace=True)
+        gdf.rename(columns={"id": "osmid"}, inplace=True)
 
         # Select relevant columns
         selected_columns = ['osmid', 'building', 'start_date', 'building:levels', 'building:material', 'geometry']
@@ -63,16 +64,15 @@ class BuildingDataDownloader:
         tags = {"building": True}
         print("Retrieving data from OpenStreetMap...")
         
-        # For versions of OSMnx >= 2.0.0
-        # gdf = ox.features_from_bbox(tuple(bbox), tags) 
-        
-        # For versions of OSMnx < 2.0.0
-        bbox = [bbox[3], bbox[1], bbox[2], bbox[0]]
-        gdf = ox.features_from_bbox(bbox=bbox, tags = tags) # N, S, E, W
+        if int(ox.__version__.split(".")[0]) >= 2:
+            gdf = ox.features_from_bbox(tuple(bbox), tags)
+        else:
+            gdf = ox.features_from_bbox(bbox=(bbox[3], bbox[1], bbox[2], bbox[0]), tags=tags)
 
         # Keep only valid polygon geometries
         gdf = gdf[gdf.geometry.apply(lambda x: x.geom_type in ['Polygon', 'MultiPolygon'])]
         gdf.reset_index(drop=False, inplace=True)
+        gdf.rename(columns={"id": "osmid"}, inplace=True)
 
         # Select relevant columns
         selected_columns = ['osmid', 'building', 'start_date', 'building:levels', 'building:material', 'geometry']

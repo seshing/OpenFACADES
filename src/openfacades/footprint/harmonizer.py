@@ -134,6 +134,8 @@ def preprocess_osm_building_attributes(gdf_buildings):
     floors > 0 or NaN.
     """
     gdf_copy = gdf_buildings.copy()
+    if 'building_floor' not in gdf_copy.columns:
+        gdf_copy['building_floor'] = np.nan
     gdf_copy['building_floor'] = gdf_copy['building_floor'].apply(get_level)
 
     # Keep positive levels or NaNs

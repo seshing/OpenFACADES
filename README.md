@@ -9,6 +9,8 @@
 # OpenFACADES
 An Open Framework for Architectural Caption and Attribute Data Enrichment via Street View Imagery
 
+📄 [Paper](https://doi.org/10.1016/j.isprsjprs.2025.10.014)
+
 ## Overview
 OpenFACADES is an open-source framework designed to enrich building profiles with objective attributes and semantic descriptors by leveraging multimodal crowdsourced data and large vision-language models. It provides tools for integrating diverse datasets, automating building facade detection, and generating detailed annotations at scale.
 
@@ -48,17 +50,6 @@ OpenFACADES is an open-source framework designed to enrich building profiles wit
 </p>
 
 
-## To Do List
-- [x] Release code for building data harmonization.
-- [x] Release code for integrating building and street view imagery data.
-- [x] Develop Google Colab tutorial for retriving building image data.
-- [x] Release training code for fine-tuning InternVL models.
-- [x] Release training data.
-- [x] Develop Google Colab tutorial for building labeling and captioning.
-- [x] Release fine-tuned model (1B, 2B).
-- [ ] Integrate more SVI platforms into the framework.
-- [ ]  Expand criteria for building image selection.
-
 ## Installation
 
 To install OpenFACADES, follow these steps:
@@ -81,6 +72,8 @@ To install OpenFACADES, follow these steps:
 
 ## Quick start
 
+### Working with Mapillary
+
 To acquire individual building images (Steps 1 & 2 above) for an area, you can simply run:
   ```bash
   python OpenFACADES/run.py \
@@ -96,6 +89,24 @@ To acquire individual building images (Steps 1 & 2 above) for an area, you can s
 ```[-73.578,45.497,-73.569,45.502]```: an area in Montreal, Canada;<br />
 ```[37.618,55.758,37.628,55.763]```: an area in Moscow, Russia;<br />
 ```[25.273,54.684,25.283,54.687]```: an area in Vilnius, Lithuania.
+
+### Working with Google Street View
+
+Download GSV panoramas yourself and name each file `<pid>.jpg`, `<pid>.jpeg`, or `<pid>.png`.
+Supply a metadata CSV with `pid`, `lat`, `lng`, and `heading` (in radians).
+
+```bash
+python OpenFACADES/run_gsv.py --images "/path/to/panoramas" \
+  --metadata "/path/to/metadata.csv"
+```
+
+Test on the [GSV example](test/gsv):
+
+```bash
+python OpenFACADES/run_gsv.py --images OpenFACADES/test/gsv/images \
+  --metadata OpenFACADES/test/gsv/metadata.csv \
+  --footprints OpenFACADES/test/gsv/footprint.geojson
+```
 
 **Output paths:**  <br />
 building footprint: ```output/01_data/footprint.geojson```;  <br />
@@ -125,6 +136,8 @@ https://doi.org/10.1016/j.buildenv.2024.111875
 ## Citation
 Please cite the following paper if you use `OpenFACADES` in a scientific publication:
 
+Liang, X., Xie, J., Zhao, T., Stouffs, R., and Biljecki, F. (2025). OpenFACADES: An open framework for architectural caption and attribute data enrichment via street view imagery. *ISPRS Journal of Photogrammetry and Remote Sensing*, **230**, 918–942. [https://doi.org/10.1016/j.isprsjprs.2025.10.014](https://doi.org/10.1016/j.isprsjprs.2025.10.014)
+
 ```bibtex
 @article{liang2025openfacades,
         title = {OpenFACADES: An open framework for architectural caption and attribute data enrichment via street view imagery},
@@ -133,7 +146,8 @@ Please cite the following paper if you use `OpenFACADES` in a scientific publica
         journal = {ISPRS Journal of Photogrammetry and Remote Sensing},
         volume = {230},
         pages = {918--942},
-        issn = {0924-2716}
+        issn = {0924-2716},
+        doi = {10.1016/j.isprsjprs.2025.10.014}
         }
 ```
 

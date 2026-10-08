@@ -45,7 +45,14 @@ def process_point(row, gdf, buffer, distance_between_points):
         return [(LineString([view_point, point]), building_id) for point, building_id in target_points_with_id]
 
     def remove_intersecting_lines(lines, gdf):
-        return [(line, building_id) for line, building_id in lines if not gdf.intersects(line).any()]
+        visible = []
+        for line, building_id in lines:
+            # Do not count the endpoint touching the target facade as an obstruction.
+            end = line.interpolate(max(0, line.length - 1e-6))
+            sightline = LineString([line.coords[0], end.coords[0]])
+            if not gdf.intersects(sightline).any():
+                visible.append((line, building_id))
+        return visible
 
     def calculate_angle(view_point, target_point):
         delta_x = target_point.x - view_point.x
@@ -117,7 +124,7 @@ def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, 
     city_crs = gdf_buildings.crs  # Extract the determined CRS
 
     # Convert observation points to GeoDataFrame and project to the same CRS
-    df_points = pd.read_csv(img_metadata)
+    df_points = pd.read_csv(img_metadata, dtype={"id": str})
     df_points.rename(columns={'id': 'pid', 'computed_compass_angle': 'compass_angle'}, inplace=True)
     gdf_points = gpd.GeoDataFrame(df_points, geometry=gpd.points_from_xy(df_points.lng, df_points.lat), crs="EPSG:4326")
     gdf_points = gdf_points.to_crs(city_crs)
@@ -126,7 +133,7 @@ def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, 
     processed_pairs = set()
     if os.path.exists(out_dir) and os.path.getsize(out_dir) > 0:
         try:
-            existing_data = pd.read_csv(out_dir)
+            existing_data = pd.read_csv(out_dir, dtype={'pid': str, 'building_id': str})
             processed_pairs = set(zip(existing_data['pid'], existing_data['building_id']))
             print(f"Found {len(processed_pairs)} existing point-building pairs to skip.")
         except Exception as e:

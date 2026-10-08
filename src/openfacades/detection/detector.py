@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 # GroundingDINO
 from groundingdino.util.inference import load_model, load_image, predict
-from .pano2pers import save_bounding_boxes_as_images
+from .pano2pers import save_bounding_boxes_as_images, _find_image_file
 
 # Suppress unhelpful warnings
 warnings.filterwarnings('ignore', category=UserWarning)
@@ -144,7 +144,7 @@ class GroundingDinoDetector:
         """
 
         # Load the CSV with AoV geometry
-        geo_aov = pd.read_csv(geo_aov_csv)
+        geo_aov = pd.read_csv(geo_aov_csv, dtype={"pid": str, "building_id": str})
         geo_aov['pid'] = geo_aov['pid'].astype(str)
         geo_aov['left_angle_image'] = (geo_aov['left_angle_geo'] - geo_aov['compass_angle'] + 180) % 360
         geo_aov['right_angle_image'] = (geo_aov['right_angle_geo'] - geo_aov['compass_angle'] + 180) % 360
@@ -157,18 +157,23 @@ class GroundingDinoDetector:
         file_exists = os.path.isfile(file_path)
         already_id = set()
         if file_exists:
-            already_id = set(pd.read_csv(file_path)['pid'].astype(str).unique())
-        remaining_pid = pid_all - already_id
+            already_id = set(pd.read_csv(file_path, dtype={'pid': str})['pid'].unique())
+        remaining_pid = (pid_all & set(geo_aov["pid"])) - already_id
+        os.makedirs(output_folder, exist_ok=True)
+        if not file_exists:
+            with open(file_path, "w", newline="") as file:
+                csv.writer(file).writerow(["pid", "building_id", "boxes"])
+            file_exists = True
         print(f"Found {len(pid_all)} images total in {images_folder}, {len(remaining_pid)} remain to process.")
         
         # Create a DataFrame of 'pid' and 'image_url' based on 'remaining_pid'
         img_data = []
         for pid in remaining_pid:
-            img_path = next((os.path.join(root, name) for root, _, files in os.walk(images_folder) for name in files if name == f"{pid}.png"), None)
+            img_path = _find_image_file(pid, images_folder)
             if img_path is not None and os.path.exists(img_path):
                 img_data.append({'pid': pid, 'image_url': img_path})
                 
-        img_df = pd.DataFrame(img_data)
+        img_df = pd.DataFrame(img_data, columns=["pid", "image_url"])
         
         # Main detection loop
         for pid in tqdm(remaining_pid, desc="Processing images", dynamic_ncols=True, leave=False):
@@ -195,16 +200,23 @@ class GroundingDinoDetector:
                 img_height, img_width = img.shape[:2]
                 color = self.generate_random_color()
 
-                # Convert angles to pixel positions
-                x_left = max(int(left_bd / 360 * img_width - adjust_angle * img_width), 0)
-                x_right = min(int(right_bd / 360 * img_width + adjust_angle * img_width), img_width)
-
-                # Crop the relevant portion of the image
-                if x_right <= x_left:
-                    # print(f"Invalid crop for building: {building_id}")
+                # Keep the crop continuous when it crosses 0°/360°.
+                if right_bd < left_bd:
+                    right_bd += 360
+                x_left = int(left_bd * img_width / 360 - adjust_angle * img_width)
+                x_right = int(right_bd * img_width / 360 + adjust_angle * img_width)
+                crop_width = min(x_right - x_left, img_width)
+                if crop_width <= 0:
                     continue
 
-                cropped_image = img[:, x_left:x_right]
+                x_left %= img_width
+                x_right = x_left + crop_width
+                if x_right > img_width:
+                    cropped_image = cv2.hconcat([
+                        img[:, x_left:], img[:, :x_right - img_width]
+                    ])
+                else:
+                    cropped_image = img[:, x_left:x_right]
                 pil_image = Image.fromarray(cropped_image)
 
                 # Convert to in-memory bytes for GroundingDINO
@@ -247,13 +259,20 @@ class GroundingDinoDetector:
                 ])
                 conf = float(filtered_logits[0])
 
-                # Draw bounding box
-                cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+                # Draw a seam-crossing box on both sides of the panorama.
+                if x1 >= img_width:
+                    x1 -= img_width
+                    x2 -= img_width
+                if x2 > img_width:
+                    cv2.rectangle(img, (x1, y1), (img_width - 1, y2), color, 2)
+                    cv2.rectangle(img, (0, y1), (x2 - img_width, y2), color, 2)
+                else:
+                    cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
                 text = f"ID: {building_id}, Conf: {conf:.2f}"
                 cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
 
                 # Convert to normalized coords
-                cx = (x1 + x2) / 2
+                cx = ((x1 + x2) / 2) % img_width
                 cy = (y1 + y2) / 2
                 w = x2 - x1
                 h = y2 - y1

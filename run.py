@@ -1,10 +1,5 @@
 import os
 from pathlib import Path
-from openfacades.footprint import BuildingDataDownloader, harmonize_buildings
-from zensvi.download import MLYDownloader
-from openfacades.streetview import bbox_to_geojson, process_metadata
-from openfacades.streetview import geo_aov_calculator, filter_img_by_aov
-from openfacades.detection import GroundingDinoDetector
 import argparse
 
 def parse_bbox(bbox_str: str) -> list[float]:
@@ -15,14 +10,16 @@ def parse_bbox(bbox_str: str) -> list[float]:
         raise ValueError("bbox must have exactly 4 values.")
     return [float(x) for x in parts]
 
-def download_and_merge_buildings(bbox, output_path):
+def download_and_merge_buildings(bbox, output_path, overwrite=False):
     """
     Download OSM and Overture building footprints for the given bbox,
     harmonize them, and save as GeoJSON.
     """
+    from openfacades.footprint import BuildingDataDownloader, harmonize_buildings
+
     out_geojson = os.path.join(output_path, "footprint.geojson")
     
-    if os.path.exists(out_geojson):
+    if os.path.exists(out_geojson) and not overwrite:
         print(f"Building footprints file already exists, skipping: {out_geojson}")
         return
     
@@ -51,6 +48,9 @@ def prepare_mly_metadata(bbox, output_path, mly_api_key):
     Generate a bounding-box GeoJSON, then download Mapillary metadata
     (pano metadata only) into 'pids_urls.csv'.
     """
+    from zensvi.download import MLYDownloader
+    from openfacades.streetview import bbox_to_geojson, process_metadata
+
     print("=== Preparing Bounding Box GeoJSON ===")
     bbox_gdf = bbox_to_geojson(bbox)
     bbox_path = os.path.join(output_path, "bbox.geojson")
@@ -89,6 +89,8 @@ def compute_and_filter_aov(cleaned_metadata, output_path):
     Compute the AoV for each panorama and filter by constraints,
     then produce a CSV of selected panos ('pids_urls_select.csv').
     """
+    from openfacades.streetview import geo_aov_calculator, filter_img_by_aov
+
     aov_csv_path = os.path.join(output_path, "aov.csv")
     if not os.path.exists(aov_csv_path):
         print("=== Computing AoV ===")
@@ -122,6 +124,8 @@ def download_selected_images(output_path, path_pid, mly_api_key):
     """
     Download selected panorama images (i.e., .png files) from the 'pids_urls_select.csv'.
     """
+    from zensvi.download import MLYDownloader
+
     print("=== Downloading Selected Panoramic Images ===")
     mly_downloader = MLYDownloader(mly_api_key)
     mly_downloader.download_svi(
@@ -135,11 +139,13 @@ def download_selected_images(output_path, path_pid, mly_api_key):
     )
 
 
-def run_object_detection(aov_csv_path, output_path):
+def run_object_detection(aov_csv_path, output_path, images_folder=None):
     """
     Run GroundingDINO object detection on the downloaded 360 images,
     referencing the AoV CSV.
     """
+    from openfacades.detection import GroundingDinoDetector
+
     print("=== Initializing GroundingDinoDetector ===")
     detector = GroundingDinoDetector(
         config_path="config/GroundingDINO_SwinT_OGC.py",
@@ -149,7 +155,7 @@ def run_object_detection(aov_csv_path, output_path):
     print("=== Running Detection ===")
     detector.run_detection(
         geo_aov_csv=aov_csv_path,
-        images_folder=os.path.join(output_path, "mly_svi"),
+        images_folder=images_folder or os.path.join(output_path, "mly_svi"),
         output_folder=output_path,
         max_aov=130,
         min_aov=10,
@@ -189,13 +195,25 @@ def main():
     parser.add_argument(
         "--bbox",
         type=parse_bbox,
-        required=True,
         help="Bounding box coordinates [left, bottom, right, top]"
     )
-    parser.add_argument("--api_key", type=str, required=True, help="Mapillary API key")
+    parser.add_argument("--api_key", type=str, help="Mapillary API key")
+    parser.add_argument("--source", choices=["mly", "gsv"], default="mly")
+    parser.add_argument("--images", help="Local GSV panorama directory")
+    parser.add_argument("--metadata", help="Local GSV metadata CSV")
+    parser.add_argument("--footprints", help="Optional local GSV building footprints")
 
     args = parser.parse_args()
     
+    if args.source == "gsv":
+        if not args.images or not args.metadata:
+            parser.error("GSV requires --images and --metadata.")
+        from run_gsv import run_gsv
+        run_gsv(args.images, args.metadata, footprints=args.footprints)
+        return
+    if not args.bbox or not args.api_key:
+        parser.error("Mapillary requires --bbox and --api_key.")
+
     bbox = args.bbox
     mly_api_key = args.api_key
     
