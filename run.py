@@ -139,7 +139,7 @@ def download_selected_images(output_path, path_pid, mly_api_key):
     )
 
 
-def run_object_detection(aov_csv_path, output_path, images_folder=None):
+def run_object_detection(aov_csv_path, output_path, images_folder=None, max_fov=None):
     """
     Run GroundingDINO object detection on the downloaded 360 images,
     referencing the AoV CSV.
@@ -162,7 +162,8 @@ def run_object_detection(aov_csv_path, output_path, images_folder=None):
         box_threshold=0.35,
         adjust_angle=0.05,
         save_annotated_images=True,
-        text_prompt="building"
+        text_prompt="building",
+        max_fov=max_fov
     )
     
 

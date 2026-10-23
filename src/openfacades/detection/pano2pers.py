@@ -140,7 +140,8 @@ def _find_image_file(pid: str, image_dir: str) -> Optional[str]:
 def save_bounding_boxes_as_images(
     all_results_path: str,
     image_dir: str,
-    out_dir: str
+    out_dir: str,
+    max_fov: Optional[float] = None
 ) -> pd.DataFrame:
     
     """
@@ -157,6 +158,7 @@ def save_bounding_boxes_as_images(
             - 'boxes': stringified list [x_center, y_center, w, h, ...]
         image_dir (str): Directory containing input images in .jpg, .jpeg or .png.
         out_dir (str): Output directory to store subfolder of cropped images.
+        max_fov (float, optional): Cap horizontal view, keeping the detected center.
 
     Returns:
         pd.DataFrame: Summary DataFrame with columns:
@@ -165,6 +167,8 @@ def save_bounding_boxes_as_images(
             - 'building_id'
     """
 
+    if max_fov is not None and not 0 < max_fov < 180:
+        raise ValueError("max_fov must be between 0 and 180 degrees.")
     all_results = pd.read_csv(all_results_path, dtype={"pid": str, "building_id": str})
     building_dir = os.path.join(out_dir, "individual_building")
     os.makedirs(building_dir, exist_ok=True)
@@ -206,6 +210,13 @@ def save_bounding_boxes_as_images(
             y_center=y_center
         )
         out_width = box_width * img_width
+        if max_fov is not None and FOV > max_fov:
+            # Preserve focal length and vertical view; discard only the sides.
+            if FOV < 180:
+                out_width *= math.tan(math.radians(max_fov / 2)) / math.tan(math.radians(FOV / 2))
+            else:
+                out_width = max_fov / 360 * img_width
+            FOV = max_fov
 
         # Perspective crop
         cropped_image = get_perspective(

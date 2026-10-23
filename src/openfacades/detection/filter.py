@@ -133,6 +133,8 @@ def filter_img_by_features(building_path, output_path, min_file_size=20000, min_
         segmantation(building_path, output_path)
 
     segmentation_df = pd.read_csv(os.path.join(output_path, 'pixel_ratios.csv'))
+    segmentation_df['Building'] = segmentation_df.get('Building', 0)
+    segmentation_df['Wall'] = segmentation_df.get('Wall', 0)
     building_filtered = segmentation_df[segmentation_df['Building'] >= min_building_ratio]
     building_wall_filtered = building_filtered[building_filtered['Wall'] <= max_wall_ratio]
     segmentation_filtered_keys = set(building_wall_filtered['filename_key'])

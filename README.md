@@ -108,6 +108,19 @@ python OpenFACADES/run_gsv.py --images OpenFACADES/test/gsv/images \
   --footprints OpenFACADES/test/gsv/footprint.geojson
 ```
 
+### Find views of one OSM building
+
+Set `MAPILLARY_API_KEY` locally, then search by building ID:
+
+```bash
+python OpenFACADES/run_building.py --building-id way/123
+```
+
+Returns up to 5 quality-filtered views, prioritising different sides, with a maximum
+135° field of view. Numeric IDs default to OSM ways; `relation/123` is also supported.
+Results are saved to `output/building_way_123/run_*/`, with selected images listed in
+`02_img/individual_building_select.csv`.
+
 **Output paths:**  <br />
 building footprint: ```output/01_data/footprint.geojson```;  <br />
 detected building images: ```output/02_img/individual_building```;  <br />

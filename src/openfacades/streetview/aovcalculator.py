@@ -5,6 +5,7 @@ import pandas as pd
 import csv
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import math
+import json
 import numpy as np
 from tqdm import tqdm
 
@@ -15,12 +16,56 @@ def project_gdf(gdf):
     utm_crs = f"+proj=utm +zone={utm_zone} +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
     return gdf.to_crs(utm_crs)
 
-def process_point(row, gdf, buffer, distance_between_points):
+def target_samples(buildings, view_point, spacing):
+    """Sample facade segments, retaining adjacent side groups for one target."""
+    from shapely.geometry.polygon import orient
+    samples = []
+    part = 0
+    for geometry in buildings.geometry:
+        polygons = list(geometry.geoms) if geometry.geom_type == 'MultiPolygon' else [geometry]
+        for polygon in polygons:
+            coords = list(orient(polygon, sign=1).exterior.coords)
+            edges = []
+            group = 0
+            previous = None
+            for start, end in zip(coords, coords[1:]):
+                dx, dy = end[0] - start[0], end[1] - start[1]
+                length = math.hypot(dx, dy)
+                if length == 0:
+                    continue
+                normal = np.array([dy, -dx]) / length
+                if previous is None:
+                    previous = normal
+                elif np.dot(normal, previous) < math.cos(math.radians(15)):
+                    group += 1
+                    previous = normal
+                edges.append((LineString([start, end]), normal, group))
+            # First and last segments may be the same facade split at the ring origin.
+            if len(edges) > 1 and np.dot(edges[0][1], edges[-1][1]) >= math.cos(math.radians(15)):
+                last_group = edges[-1][2]
+                edges = [(edge, normal, 0 if side == last_group else side) for edge, normal, side in edges]
+            for edge, normal, side in edges:
+                count = max(2, math.ceil(edge.length / spacing))
+                for index in range(count):
+                    point = edge.interpolate((index + 0.5) / count, normalized=True)
+                    direction = np.array([view_point.x - point.x, view_point.y - point.y])
+                    distance = np.linalg.norm(direction)
+                    if distance > 0:
+                        frontality = float(np.dot(normal, direction / distance))
+                        if frontality > 0:
+                            samples.append((point, f"{part}:{side}", frontality))
+            part += 1
+    return samples
+
+
+def process_point(row, gdf, buffer, distance_between_points, target_building_id=None):
     """Process a single observation point, computing its field-of-view (FoV)."""
     fov_metrics = []
     view_point = row['geometry']
     view_point_buffer = view_point.buffer(buffer)
     target_buildings = gdf[gdf.intersects(view_point_buffer)]
+    if target_building_id is not None:
+        target_buildings = gdf[gdf['building_id'].astype(str) == str(target_building_id)]
 
     def generate_points_along_geometry(gdf, distance):
         points_with_id = []
@@ -60,8 +105,18 @@ def process_point(row, gdf, buffer, distance_between_points):
         angle_radians = math.atan2(delta_x, delta_y)
         return (math.degrees(angle_radians) + 360) % 360
 
-    target_points = generate_points_along_geometry(target_buildings, distance_between_points)
-    unobstructed_lines = remove_intersecting_lines(create_view_lines(view_point, target_points), target_buildings)
+    side_samples = {}
+    if target_building_id is None:
+        target_points = generate_points_along_geometry(target_buildings, distance_between_points)
+        obstacles = target_buildings
+    else:
+        if distance_between_points <= 0:
+            raise ValueError("Sampling distance must be positive.")
+        sampled = target_samples(target_buildings, view_point, distance_between_points)
+        target_points = [(point, str(target_building_id)) for point, _, _ in sampled]
+        side_samples = {(point.x, point.y): (side, frontality) for point, side, frontality in sampled}
+        obstacles = gdf
+    unobstructed_lines = remove_intersecting_lines(create_view_lines(view_point, target_points), obstacles)
     
     # Compute the shortest distance for each building from the unobstructed lines
     building_distances = {}
@@ -102,16 +157,23 @@ def process_point(row, gdf, buffer, distance_between_points):
             "distance": shortest_distance
         })
 
+    if target_building_id is not None and fov_metrics:
+        visible = [side_samples[tuple(line.coords[-1])] for line, _ in unobstructed_lines]
+        center = target_buildings.geometry.union_all().representative_point()
+        for metric in fov_metrics:
+            metric['visible_sides'] = json.dumps(sorted({side for side, _ in visible}))
+            metric['frontality'] = max(frontality for _, frontality in visible)
+            metric['view_angle'] = calculate_angle(center, view_point)
     return fov_metrics
 
-def process_batch(batch, gdf, buffer, distance_between_points):
+def process_batch(batch, gdf, buffer, distance_between_points, target_building_id=None):
     """Process a batch of observation points."""
     results = []
     for _, row in batch.iterrows():
-        results.extend(process_point(row, gdf, buffer, distance_between_points))
+        results.extend(process_point(row, gdf, buffer, distance_between_points, target_building_id))
     return results
 
-def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, out_dir, batch_size=10, max_workers=8):
+def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, out_dir, batch_size=10, max_workers=8, target_building_id=None):
     """
     Calculate the geometric field of view (FoV) for observation points relative to buildings.
     Now with multiprocessing support and progress reporting using tqdm.
@@ -119,7 +181,13 @@ def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, 
     
     # Load building footprint data and determine city CRS
     gdf_buildings = gpd.read_file(json_dir)
-    gdf_buildings = project_gdf(gdf_buildings)  # Determine CRS automatically
+    if target_building_id is None:
+        gdf_buildings = project_gdf(gdf_buildings)  # Preserve the existing default.
+    else:
+        target = gdf_buildings[gdf_buildings['building_id'].astype(str) == str(target_building_id)]
+        if target.empty:
+            raise ValueError("Target building is missing from footprints.")
+        gdf_buildings = gdf_buildings.to_crs(target.estimate_utm_crs())
     gdf_buildings['building_id'] = gdf_buildings['building_id'].astype(str)
     city_crs = gdf_buildings.crs  # Extract the determined CRS
 
@@ -145,6 +213,8 @@ def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, 
     # Open CSV for writing results
     with open(out_dir, 'a', newline='') as f:
         fieldnames = ["pid", "lat", "lng", "compass_angle", "building_id", "left_angle_geo", "right_angle_geo", "aov_geo", "distance"]
+        if target_building_id is not None:
+            fieldnames += ['visible_sides', 'frontality', 'view_angle']
         writer = csv.DictWriter(f, fieldnames=fieldnames)
 
         # Write header only if file is empty
@@ -155,7 +225,7 @@ def geo_aov_calculator(img_metadata, json_dir, buffer, distance_between_points, 
         # Process in parallel with a progress bar
         with ProcessPoolExecutor(max_workers=max_workers) as executor:
             batches = [gdf_points.iloc[i:i + batch_size] for i in range(0, total_points, batch_size)]
-            future_to_batch = {executor.submit(process_batch, batch, gdf_buildings, buffer, distance_between_points): batch for batch in batches}
+            future_to_batch = {executor.submit(process_batch, batch, gdf_buildings, buffer, distance_between_points, target_building_id): batch for batch in batches}
 
             for future in tqdm(as_completed(future_to_batch), total=len(future_to_batch), desc="Processing batches"):
                 for metric in future.result():

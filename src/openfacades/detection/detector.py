@@ -121,7 +121,8 @@ class GroundingDinoDetector:
         adjust_angle: float = 0.0,
         text_threshold: float = 0.3,
         save_annotated_images: bool = True,
-        text_prompt: str = "building"
+        text_prompt: str = "building",
+        max_fov=None
     ):
         """
         Main method to detect buildings (or any text prompt) in images using
@@ -304,7 +305,7 @@ class GroundingDinoDetector:
                 
         save_bounding_boxes_as_images(file_path, 
                                       images_folder,
-                                      output_folder)
+                                      output_folder, max_fov=max_fov)
 
         print(f"Processing complete. Results saved in {output_folder}.")
 
