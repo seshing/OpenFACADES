@@ -92,10 +92,6 @@ To acquire individual building images (Steps 1 & 2 above) for an area, you can s
 
 ### Working with Google/Baidu Street View
 
-Download panoramas yourself and name each file `<pid>.jpg`, `<pid>.jpeg`, or `<pid>.png`.
-Supply a metadata CSV with `pid`, `lat`, `lng` (WGS84), and `heading` (radians).
-For Baidu, use the original `streetlevel` heading; the code adjusts it automatically.
-
 ```bash
 python OpenFACADES/run_local.py --source gsv --images "/path/to/panoramas" \
   --metadata "/path/to/metadata.csv"
