@@ -90,22 +90,31 @@ To acquire individual building images (Steps 1 & 2 above) for an area, you can s
 ```[37.618,55.758,37.628,55.763]```: an area in Moscow, Russia;<br />
 ```[25.273,54.684,25.283,54.687]```: an area in Vilnius, Lithuania.
 
-### Working with Google Street View
+### Working with Google/Baidu Street View
 
-Download GSV panoramas yourself and name each file `<pid>.jpg`, `<pid>.jpeg`, or `<pid>.png`.
-Supply a metadata CSV with `pid`, `lat`, `lng`, and `heading` (in radians).
+Download panoramas yourself and name each file `<pid>.jpg`, `<pid>.jpeg`, or `<pid>.png`.
+Supply a metadata CSV with `pid`, `lat`, `lng` (WGS84), and `heading` (radians).
+For Baidu, use the original `streetlevel` heading; the code adjusts it automatically.
 
 ```bash
-python OpenFACADES/run_gsv.py --images "/path/to/panoramas" \
+python OpenFACADES/run_local.py --source gsv --images "/path/to/panoramas" \
   --metadata "/path/to/metadata.csv"
 ```
 
 Test on the [GSV example](test/gsv):
 
 ```bash
-python OpenFACADES/run_gsv.py --images OpenFACADES/test/gsv/images \
+python OpenFACADES/run_local.py --source gsv --images OpenFACADES/test/gsv/images \
   --metadata OpenFACADES/test/gsv/metadata.csv \
   --footprints OpenFACADES/test/gsv/footprint.geojson
+```
+
+Or test on the [Baidu example](test/baidu) (3 panoramas):
+
+```bash
+python OpenFACADES/run_local.py --source baidu --images OpenFACADES/test/baidu/images \
+  --metadata OpenFACADES/test/baidu/metadata.csv \
+  --footprints OpenFACADES/test/baidu/footprint.geojson
 ```
 
 ### Find views of one OSM building

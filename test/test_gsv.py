@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from shapely.geometry import Point, box
 
-import run_gsv
+import run_local
 from openfacades.footprint.downloader import BuildingDataDownloader
 from openfacades.streetview.aovcalculator import process_point
 from openfacades.detection.pano2pers import _find_image_file, save_bounding_boxes_as_images
@@ -35,7 +35,7 @@ class GSVTests(unittest.TestCase):
             self.assertAlmostEqual(clean.computed_compass_angle.iloc[0], 112)
             pd.DataFrame(columns=['pid']).to_csv(kwargs['out_dir'], index=False)
         with patch('run.download_and_merge_buildings', side_effect=download), patch('openfacades.streetview.geo_aov_calculator', side_effect=calculate):
-            run_gsv.run_gsv(self.images, self.metadata, self.root / 'output')
+            run_local.run_local(self.images, self.metadata, self.root / 'output')
         self.assertEqual(len(downloaded), 1)
         self.assertTrue(downloaded[0][1])
         points = gpd.GeoSeries([Point(11.568, 48.148)], crs='EPSG:4326')
@@ -51,7 +51,7 @@ class GSVTests(unittest.TestCase):
             np.testing.assert_allclose(clean.computed_compass_angle, [0, 90, 180, 360])
             pd.DataFrame(columns=['pid']).to_csv(kwargs['out_dir'], index=False)
         with patch('run.download_and_merge_buildings'), patch('openfacades.streetview.geo_aov_calculator', side_effect=calculate):
-            run_gsv.run_gsv(self.images, self.metadata, self.root / 'heading_output')
+            run_local.run_local(self.images, self.metadata, self.root / 'heading_output')
 
     def test_local_footprints_skip_download(self):
         footprint = self.root / 'local.geojson'
@@ -61,14 +61,14 @@ class GSVTests(unittest.TestCase):
             self.assertIn('building_id', loaded.columns)
             pd.DataFrame(columns=['pid']).to_csv(kwargs['out_dir'], index=False)
         with patch('run.download_and_merge_buildings') as download, patch('openfacades.streetview.geo_aov_calculator', side_effect=calculate):
-            run_gsv.run_gsv(self.images, self.metadata, self.root / 'local_output', footprint)
+            run_local.run_local(self.images, self.metadata, self.root / 'local_output', footprint)
             download.assert_not_called()
 
     def test_invalid_metadata_fails_before_download(self):
         pd.DataFrame([{'pid':'bad', 'lat':999, 'lng':11, 'heading':0}]).to_csv(self.metadata, index=False)
         with patch('run.download_and_merge_buildings') as download:
             with self.assertRaises(ValueError):
-                run_gsv.run_gsv(self.images, self.metadata, self.root / 'bad')
+                run_local.run_local(self.images, self.metadata, self.root / 'bad')
             download.assert_not_called()
 
     def test_osmnx_2_bounds_and_building_id(self):
@@ -115,7 +115,7 @@ class GSVTests(unittest.TestCase):
             self.assertEqual(images_folder,str(self.images))
             pd.DataFrame([{'image_name':'sample.png','pid':'001_GSV','building_id':'123'}]).to_csv(Path(output)/'individual_building.csv',index=False)
         with patch('openfacades.streetview.aovcalculator.ProcessPoolExecutor', ThreadPoolExecutor), patch('run.run_object_detection', side_effect=detect) as detection, patch('run.select_suitable_building_image') as filtering:
-            run_gsv.run_gsv(self.images,self.metadata,self.root/'pipeline',footprint)
+            run_local.run_local(self.images,self.metadata,self.root/'pipeline',footprint)
             detection.assert_called_once()
             filtering.assert_called_once()
 

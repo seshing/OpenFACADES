@@ -1,32 +1,36 @@
-"""Process local GSV panoramas using OpenFACADES."""
+"""Process local Google or Baidu Street View panoramas using OpenFACADES."""
 import argparse
 import math
 from pathlib import Path
 
 
-def run_gsv(images, metadata, output="output", footprints=None):
+def run_local(images, metadata, output="output", footprints=None, source="gsv"):
     import geopandas as gpd
     import pandas as pd
     from shapely.geometry import box
     from openfacades.streetview import geo_aov_calculator
     from run import download_and_merge_buildings, run_object_detection, select_suitable_building_image
 
+    if source not in ("gsv", "baidu"):
+        raise ValueError("Source must be gsv or baidu.")
     images = Path(images)
     if not images.is_dir():
         raise ValueError("The image directory does not exist.")
     data = pd.read_csv(metadata, dtype={"pid": str})
     required = ["pid", "lat", "lng", "heading"]
     if not set(required).issubset(data.columns):
-        raise ValueError("GSV metadata needs pid, lat, lng and heading (in radians).")
+        raise ValueError("Street view metadata needs pid, lat, lng and heading (in radians).")
     data = data[required].copy()
     if data.empty or data.isna().any().any():
-        raise ValueError("GSV metadata must contain complete image IDs and coordinates.")
+        raise ValueError("Street view metadata must contain complete image IDs and coordinates.")
     for column in ["lat", "lng", "heading"]:
         data[column] = pd.to_numeric(data[column], errors="raise")
     data["degree"] = 360 * data["heading"] / (2 * math.pi)
     if not (data.lat.between(-90, 90).all() and data.lng.between(-180, 180).all()
             and data.degree.between(0, 360).all()):
-        raise ValueError("Invalid coordinates or heading values in GSV metadata.")
+        raise ValueError("Invalid coordinates or heading values in Street view metadata.")
+    if source == "baidu":
+        data["degree"] = (data["degree"] - 90) % 360
 
     output = Path(output)
     data_dir = output / "01_data"
@@ -72,12 +76,13 @@ def run_gsv(images, metadata, output="output", footprints=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Process local GSV panoramas; no image downloading.")
+    parser = argparse.ArgumentParser(description="Process local Google or Baidu Street View panoramas; no image downloading.")
+    parser.add_argument("--source", choices=["gsv", "baidu"], default="gsv")
     parser.add_argument("--images", required=True, help="Directory containing <pid>.jpg/.jpeg/.png panoramas")
     parser.add_argument("--metadata", required=True, help="CSV containing pid, lat, lng, heading (radians)")
     parser.add_argument("--footprints", help="Optional local building footprints; otherwise download OSM + Overture")
     args = parser.parse_args()
-    run_gsv(args.images, args.metadata, footprints=args.footprints)
+    run_local(args.images, args.metadata, footprints=args.footprints, source=args.source)
 
 
 if __name__ == "__main__":

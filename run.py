@@ -209,8 +209,8 @@ def main():
     if args.source == "gsv":
         if not args.images or not args.metadata:
             parser.error("GSV requires --images and --metadata.")
-        from run_gsv import run_gsv
-        run_gsv(args.images, args.metadata, footprints=args.footprints)
+        from run_local import run_local
+        run_local(args.images, args.metadata, footprints=args.footprints)
         return
     if not args.bbox or not args.api_key:
         parser.error("Mapillary requires --bbox and --api_key.")
