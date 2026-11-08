@@ -113,7 +113,7 @@ def get_level(row):
         if isinstance(row, (int, float)):
             return float(row)
         elif '+' in row:
-            return eval(row)
+            return sum(float(part) for part in row.split('+'))
         elif '-' in row and row.strip('-').isdigit():
             # Negative numbers like '-1', '-2'
             return float(row)
